@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
-import { UsersMenuItem } from './Users';
+import UsersMenuItem from './UsersMenuItem';
 
 const MainNav = ({ user }) => (
   <nav className="navbar navbar-default">
