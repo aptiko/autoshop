@@ -7,13 +7,13 @@ import { testUsers } from '../../global';
 describe('<UsersMenuItem /> UI Component', () => {
   it('renders nothing for normal users', () =>
     expect(
-      shallow(<UsersMenuItem user={testUsers[0]} />).find('li').length)
+      shallow(<UsersMenuItem loggedOnUser={testUsers[0]} />).find('li').length)
       .toBe(0),
   );
 
   it('renders a User menu item for super users', () =>
     expect(
-      shallow(<UsersMenuItem user={testUsers[1]} />).find('li').length)
+      shallow(<UsersMenuItem loggedOnUser={testUsers[1]} />).find('li').length)
       .toBe(1),
   );
 });

@@ -1,6 +1,6 @@
 import deepFreeze from 'deep-freeze';
 
-import { repairs, users } from '../../src/store/reducers';
+import { repairs, users, loggedOnUser } from '../../src/store/reducers';
 import C from '../../src/constants';
 import { testUsers, testRepairs } from '../global';
 
@@ -173,5 +173,40 @@ describe('users reducer', () => {
     deepFreeze(action);
     const result = users(testUsers, action);
     expect(result).toEqual(testUsers);
+  });
+});
+
+describe('loggedOnUser reducer', () => {
+  it('logs in', () => {
+    const action = {
+      type: C.LOGIN,
+      id: 1,
+      username: 'alice',
+      role: C.NORMAL_USER,
+    };
+    deepFreeze(action);
+    const result = loggedOnUser({}, action);
+    expect(result).toEqual({
+      id: 1,
+      username: 'alice',
+      role: C.NORMAL_USER,
+    });
+  });
+
+  it('logs out', () => {
+    const action = {
+      type: C.LOGOUT,
+    };
+    deepFreeze(action);
+    const result = loggedOnUser({
+      id: 1,
+      username: 'alice',
+      role: C.NORMAL_USER,
+    }, action);
+    expect(result).toEqual({
+      id: 0,
+      username: '',
+      role: '',
+    });
   });
 });

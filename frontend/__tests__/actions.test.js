@@ -331,3 +331,11 @@ describe('removeUser action creator', () => {
     expect(store.getState().users[1]).toEqual(testUsers[2]);
   });
 });
+
+describe('login action creator', () => {
+  console.log('fixme');
+});
+
+describe('logout action creator', () => {
+  console.log('fixme');
+});

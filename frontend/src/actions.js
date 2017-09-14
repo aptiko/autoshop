@@ -120,3 +120,9 @@ export const removeUser = id => dispatch =>
     },
   ).then(() => ({ type: C.REMOVE_USER, id }),
   ).then(dispatch);
+
+export const login = id => dispatch =>
+  dispatch({ type: C.LOGIN, id, username: 'fixme', role: 'fixme' });
+
+export const logout = () => dispatch =>
+  dispatch({ type: C.LOGOUT });

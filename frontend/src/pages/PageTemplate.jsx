@@ -1,20 +1,15 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import MainNav from '../components/ui/MainNav';
+import { MainNavContainer } from '../components/containers';
 
-const PageTemplate = ({ user, children }) => (
+const PageTemplate = ({ children }) => (
   <div className="main">
-    <MainNav user={user} />
+    <MainNavContainer />
     {children}
   </div>
 );
 
 PageTemplate.propTypes = {
-  user: PropTypes.shape({
-    id: PropTypes.number,
-    username: PropTypes.string,
-    role: PropTypes.string,
-  }).isRequired,
   children: PropTypes.node.isRequired,
 };
 

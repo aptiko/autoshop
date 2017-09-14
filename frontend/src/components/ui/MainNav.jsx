@@ -4,9 +4,9 @@ import { PropTypes } from 'prop-types';
 
 import UsersMenuItem from './UsersMenuItem';
 
-const MainNav = ({ user }) => (
+const MainNav = ({ loggedOnUser }) => (
   <nav className="navbar navbar-default">
-    {user.id ?
+    {loggedOnUser.id ?
       <div className="container-fluid">
         <ul className="nav navbar-nav">
           <li>
@@ -14,7 +14,7 @@ const MainNav = ({ user }) => (
               Repairs
             </NavLink>
           </li>
-          <UsersMenuItem user={user} />
+          <UsersMenuItem loggedOnUser={loggedOnUser} />
         </ul>
         <ul className="nav navbar-nav navbar-right">
           <li><a id="btn-logout" href="/logout/">Logout
@@ -34,7 +34,7 @@ const MainNav = ({ user }) => (
 );
 
 MainNav.propTypes = {
-  user: PropTypes.shape({
+  loggedOnUser: PropTypes.shape({
     id: PropTypes.number,
     username: PropTypes.string,
     role: PropTypes.string,

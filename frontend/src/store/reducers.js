@@ -81,3 +81,24 @@ export const users = (state = [], action) => {
       return state;
   }
 };
+
+export const loggedOnUser = (state = [], action) => {
+  switch (action.type) {
+    case C.LOGIN:
+      return {
+        id: action.id,
+        username: action.username,
+        role: action.role,
+      };
+
+    case C.LOGOUT:
+      return {
+        id: 0,
+        username: '',
+        role: '',
+      };
+
+    default:
+      return state;
+  }
+};

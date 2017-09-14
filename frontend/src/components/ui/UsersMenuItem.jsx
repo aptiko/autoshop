@@ -5,11 +5,11 @@ import { NavLink } from 'react-router-dom';
 import Throbber from './Throbber';
 import C from '../../constants';
 
-const UsersMenuItem = ({ user }) => {
-  if (!user.username) {
+const UsersMenuItem = ({ loggedOnUser }) => {
+  if (!loggedOnUser.username) {
     return <li><Throbber /></li>;
   }
-  return user.role === C.NORMAL_USER ?
+  return loggedOnUser.role === C.NORMAL_USER ?
     null
     :
     <li>
@@ -20,7 +20,7 @@ const UsersMenuItem = ({ user }) => {
 };
 
 UsersMenuItem.propTypes = {
-  user: PropTypes.shape({
+  loggedOnUser: PropTypes.shape({
     id: PropTypes.number,
     username: PropTypes.string,
     role: PropTypes.string,
