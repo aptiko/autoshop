@@ -1,8 +1,12 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from rest_framework import generics
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from . import models
 from .permissions import RepairPermission, UserPermission
@@ -51,3 +55,11 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return User.objects.all()
+
+
+@method_decorator(ensure_csrf_cookie, name='dispatch')
+class Dummy(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, format=None):
+        return Response({})

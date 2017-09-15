@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
-import { repairs, users, loggedOnUser } from './reducers';
+import { repairs, users, loggedOnUser, loginForm } from './reducers';
 
 const theInitialState = {
   repairs: [],
@@ -11,11 +11,16 @@ const theInitialState = {
     username: '',
     role: '',
   },
+  loginForm: {
+    username: '',
+    password: '',
+    error: false,
+  },
 };
 
 const storeFactory = (initialState = theInitialState) =>
   applyMiddleware(thunk)(createStore)(
-    combineReducers({ repairs, users, loggedOnUser }),
+    combineReducers({ repairs, users, loggedOnUser, loginForm }),
     initialState);
 
 export default storeFactory;

@@ -8,6 +8,7 @@ const constants = {
   REMOVE_USER: 'REMOVE_USER',
   LOGIN: 'LOGIN',
   LOGOUT: 'LOGOUT',
+  CHANGE_LOGIN_FORM: 'CHANGE_LOGIN_FORM',
 
   // Roles
   SUPERUSER: 'SUPERUSER',

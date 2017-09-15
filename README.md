@@ -95,3 +95,7 @@ all users.
 #### Delete a user: DELETE /api/users/X/
 
     curl -u alice:topsecret http://localhost:8000/api/users/3/ -X DELETE
+
+#### Get a CSRF token: GET /api/
+
+This returns an empty response, which is the way to get a CSRF token before logging in.

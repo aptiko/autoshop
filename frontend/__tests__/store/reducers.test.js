@@ -1,6 +1,7 @@
 import deepFreeze from 'deep-freeze';
 
-import { repairs, users, loggedOnUser } from '../../src/store/reducers';
+import { repairs, users, loggedOnUser, loginForm }
+  from '../../src/store/reducers';
 import C from '../../src/constants';
 import { testUsers, testRepairs } from '../global';
 
@@ -207,6 +208,42 @@ describe('loggedOnUser reducer', () => {
       id: 0,
       username: '',
       role: '',
+    });
+  });
+});
+
+describe('loginForm reducer', () => {
+  let initialState;
+
+  beforeEach(() => {
+    initialState = { username: 'alice', password: 'topsecret' };
+  });
+
+  it('changes username', () => {
+    const action = {
+      type: C.CHANGE_LOGIN_FORM,
+      username: 'bob',
+      password: null,
+    };
+    deepFreeze(action);
+    const result = loginForm(initialState, action);
+    expect(result).toEqual({
+      username: 'bob',
+      password: 'topsecret',
+    });
+  });
+
+  it('changes password', () => {
+    const action = {
+      type: C.CHANGE_LOGIN_FORM,
+      username: null,
+      password: 'verysecret',
+    };
+    deepFreeze(action);
+    const result = loginForm(initialState, action);
+    expect(result).toEqual({
+      username: 'alice',
+      password: 'verysecret',
     });
   });
 });

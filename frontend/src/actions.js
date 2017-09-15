@@ -2,9 +2,15 @@ import 'isomorphic-fetch';
 
 import C from './constants';
 
+const getCookie = (name) => {
+  const regexp = new RegExp(`(?:^${name}|;\\s*${name})=(.*?)(?:;|$)`, 'g');
+  const result = regexp.exec(document.cookie);
+  return (result === null) ? null : result[1];
+};
+
 export const addRepair = (assignedUserId, date, time, complete) => dispatch =>
   fetch(
-    '/repairs/',
+    '/api/repairs/',
     {
       method: 'POST',
       credentials: 'same-origin',
@@ -31,7 +37,7 @@ export const addRepair = (assignedUserId, date, time, complete) => dispatch =>
 export const editRepair = (assignedUserId, id, date, time, complete) =>
   dispatch =>
     fetch(
-      `/repairs/${id}/`,
+      `/api/repairs/${id}/`,
       {
         method: 'PUT',
         credentials: 'same-origin',
@@ -58,7 +64,7 @@ export const editRepair = (assignedUserId, id, date, time, complete) =>
 
 export const removeRepair = id => dispatch =>
   fetch(
-    `/repairs/${id}/`,
+    `/api/repairs/${id}/`,
     {
       method: 'DELETE',
       credentials: 'same-origin',
@@ -68,7 +74,7 @@ export const removeRepair = id => dispatch =>
 
 export const addUser = (username, role) => dispatch =>
   fetch(
-    '/users/',
+    '/api/users/',
     {
       method: 'POST',
       credentials: 'same-origin',
@@ -90,7 +96,7 @@ export const addUser = (username, role) => dispatch =>
 
 export const editUser = (id, username, role) => dispatch =>
   fetch(
-    `/users/${id}/`,
+    `/api/users/${id}/`,
     {
       method: 'PUT',
       credentials: 'same-origin',
@@ -113,7 +119,7 @@ export const editUser = (id, username, role) => dispatch =>
 
 export const removeUser = id => dispatch =>
   fetch(
-    `/users/${id}/`,
+    `/api/users/${id}/`,
     {
       method: 'DELETE',
       credentials: 'same-origin',
@@ -121,8 +127,50 @@ export const removeUser = id => dispatch =>
   ).then(() => ({ type: C.REMOVE_USER, id }),
   ).then(dispatch);
 
-export const login = id => dispatch =>
-  dispatch({ type: C.LOGIN, id, username: 'fixme', role: 'fixme' });
+export const login = (username, password) => dispatch =>
+  fetch('/api/')
+    .then(() => getCookie('csrftoken'))
+    .then(csrftoken => fetch(
+      '/api/rest-auth/login/',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      },
+    ))
+    .then(
+      (response) => {
+        if (response.status !== 200) {
+          throw new Error();
+        }
+        return response.json();
+      })
+    .then(obj => ({
+      type: C.LOGIN,
+      id: obj.id,
+      username: obj.username,
+      role: obj.role,
+    }))
+    .then(dispatch)
+    .catch(() => dispatch({
+      type: C.LOGIN,
+      id: 0,
+      username: '',
+      role: '',
+    }));
 
 export const logout = () => dispatch =>
   dispatch({ type: C.LOGOUT });
+
+export const changeLoginForm = (name, value) => dispatch =>
+  dispatch({
+    type: C.CHANGE_LOGIN_FORM,
+    username: name === 'username' ? value : null,
+    password: name === 'password' ? value : null,
+  });

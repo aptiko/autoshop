@@ -24,7 +24,9 @@ const MainNav = ({ loggedOnUser }) => (
       :
       <div className="container-fluid">
         <ul className="nav navbar-nav navbar-right">
-          <li><a id="btn-login" href="/login/?next=/main">Login</a></li>
+          <li>
+            <NavLink to="/login" activeClassName="active">Login</NavLink>
+          </li>
           <li><a id="btn-register" href="/accounts/register/">Register</a>
           </li>
         </ul>

@@ -2,7 +2,7 @@ import fetchMock from 'fetch-mock';
 
 import storeFactory from '../src/store';
 import { addRepair, editRepair, removeRepair, addUser, editUser,
-  removeUser } from '../src/actions';
+  removeUser, login, changeLoginForm } from '../src/actions';
 import C from '../src/constants';
 import { testUsers, testRepairs } from './global';
 
@@ -333,9 +333,50 @@ describe('removeUser action creator', () => {
 });
 
 describe('login action creator', () => {
-  console.log('fixme');
+  let store;
+
+  beforeAll(() => {
+    fetchMock.post('end:/login/', {});
+    store = storeFactory({ users: testUsers });
+    store.dispatch(login('alice', 'topsecret'));
+  });
+
+  afterAll(() => {
+    fetchMock.restore();
+  });
+
+  it('calls fetch as needed', () =>
+    fetchMock.flush().then(() => {
+      expect(fetchMock.lastCall('end:/login/')[1].method).toBe('POST');
+    }),
+  );
 });
 
 describe('logout action creator', () => {
   console.log('fixme');
+});
+
+describe('changeLoginForm action creator', () => {
+  let store;
+
+  beforeEach(() => {
+    store = storeFactory({
+      loginForm: {
+        username: 'alice',
+        password: 'topsecret',
+      },
+    });
+  });
+
+  it('changes username', () => {
+    store.dispatch(changeLoginForm('username', 'george'));
+    expect(store.getState().loginForm.username).toEqual('george');
+    expect(store.getState().loginForm.password).toEqual('topsecret');
+  });
+
+  it('changes password', () => {
+    store.dispatch(changeLoginForm('password', 'verysecret'));
+    expect(store.getState().loginForm.username).toEqual('alice');
+    expect(store.getState().loginForm.password).toEqual('verysecret');
+  });
 });

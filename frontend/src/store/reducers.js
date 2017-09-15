@@ -82,7 +82,7 @@ export const users = (state = [], action) => {
   }
 };
 
-export const loggedOnUser = (state = [], action) => {
+export const loggedOnUser = (state = {}, action) => {
   switch (action.type) {
     case C.LOGIN:
       return {
@@ -96,6 +96,28 @@ export const loggedOnUser = (state = [], action) => {
         id: 0,
         username: '',
         role: '',
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const loginForm = (state = {}, action) => {
+  switch (action.type) {
+    case C.LOGIN:
+      return {
+        ...state,
+        error: action.id === 0,
+      };
+
+    case C.CHANGE_LOGIN_FORM:
+      return {
+        username: action.username === null ?
+          state.username : action.username,
+        password: action.password === null ?
+          state.password : action.password,
+        error: false,
       };
 
     default:
