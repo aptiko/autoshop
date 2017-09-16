@@ -19,6 +19,7 @@ export const LoginFormContainer = connect(
       dispatch(changeLoginForm(x.target.name, x.target.value));
     },
     handleSubmit(x) {
+      x.preventDefault();
       dispatch(login(x.target.username.value, x.target.password.value));
     },
   }),

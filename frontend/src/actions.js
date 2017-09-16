@@ -127,8 +127,16 @@ export const removeUser = id => dispatch =>
   ).then(() => ({ type: C.REMOVE_USER, id }),
   ).then(dispatch);
 
-export const login = (username, password) => dispatch =>
-  fetch('/api/')
+export const login = (username, password) => (dispatch) => {
+  const action = {
+    type: C.LOGIN,
+    id: 0,
+    username,
+    role: '',
+    authToken: '',
+  };
+
+  return fetch('/api/')
     .then(() => getCookie('csrftoken'))
     .then(csrftoken => fetch(
       '/api/rest-auth/login/',
@@ -151,11 +159,19 @@ export const login = (username, password) => dispatch =>
         }
         return response.json();
       })
+    .then((obj) => {
+      action.authToken = obj.key;
+      return fetch(`/api/rest-auth/user/?username=${username}`,
+        {
+          headers: {
+            Authorization: `Token ${obj.key}`,
+          },
+        });
+    })
+    .then(response => response.json())
     .then(obj => ({
-      type: C.LOGIN,
-      id: obj.id,
-      username: obj.username,
-      role: obj.role,
+      ...action,
+      id: obj.pk,
     }))
     .then(dispatch)
     .catch(() => dispatch({
@@ -164,6 +180,7 @@ export const login = (username, password) => dispatch =>
       username: '',
       role: '',
     }));
+};
 
 export const logout = () => dispatch =>
   dispatch({ type: C.LOGOUT });

@@ -18,9 +18,16 @@ const theInitialState = {
   },
 };
 
+const saver = store => next => (action) => {
+  const result = next(action);
+  localStorage['redux-store'] = JSON.stringify(store.getState());
+  return result;
+};
+
 const storeFactory = (initialState = theInitialState) =>
-  applyMiddleware(thunk)(createStore)(
+  applyMiddleware(thunk, saver)(createStore)(
     combineReducers({ repairs, users, loggedOnUser, loginForm }),
-    initialState);
+    (localStorage['redux-store']) ?
+      JSON.parse(localStorage['redux-store']) : initialState);
 
 export default storeFactory;

@@ -9,18 +9,24 @@ const LoginForm = ({ username, password, error, handleChange, handleSubmit,
       :
       ''
     }
-    <input
-      type="text"
-      name="username"
-      value={username}
-      onChange={handleChange}
-    />
-    <input
-      type="password"
-      name="password"
-      value={password}
-      onChange={handleChange}
-    />
+    <div className="form-group">
+      <label htmlFor="username">Username</label>
+      <input
+        type="text"
+        name="username"
+        value={username}
+        onChange={handleChange}
+      />
+    </div>
+    <div className="form-group">
+      <label htmlFor="password">Password</label>
+      <input
+        type="password"
+        name="password"
+        value={password}
+        onChange={handleChange}
+      />
+    </div>
     <input type="submit" value="Login" />
   </form>
 );
