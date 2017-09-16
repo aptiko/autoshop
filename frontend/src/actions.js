@@ -1,6 +1,7 @@
 import 'isomorphic-fetch';
 
 import C from './constants';
+import history from './history';
 
 const getCookie = (name) => {
   const regexp = new RegExp(`(?:^${name}|;\\s*${name})=(.*?)(?:;|$)`, 'g');
@@ -174,11 +175,13 @@ export const login = (username, password) => (dispatch) => {
       id: obj.pk,
     }))
     .then(dispatch)
+    .then(() => history.push('/'))
     .catch(() => dispatch({
       type: C.LOGIN,
       id: 0,
       username: '',
       role: '',
+      authToken: '',
     }));
 };
 
