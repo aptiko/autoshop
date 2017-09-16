@@ -89,6 +89,7 @@ export const loggedOnUser = (state = {}, action) => {
         id: action.id,
         username: action.username,
         role: action.role,
+        authToken: action.authToken,
       };
 
     case C.LOGOUT:
@@ -96,6 +97,7 @@ export const loggedOnUser = (state = {}, action) => {
         id: 0,
         username: '',
         role: '',
+        authToken: '',
       };
 
     default:

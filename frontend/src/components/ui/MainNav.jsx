@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 
 import UsersMenuItem from './UsersMenuItem';
 
-const MainNav = ({ loggedOnUser }) => (
+const MainNav = ({ loggedOnUser, handleLogout }) => (
   <nav className="navbar navbar-default">
     {loggedOnUser.id ?
       <div className="container-fluid">
@@ -17,7 +17,7 @@ const MainNav = ({ loggedOnUser }) => (
           <UsersMenuItem loggedOnUser={loggedOnUser} />
         </ul>
         <ul className="nav navbar-nav navbar-right">
-          <li><a id="btn-logout" href="/logout/">Logout
+          <li><a id="btn-logout" href="" onClick={handleLogout}>Logout
           </a></li>
         </ul>
       </div>
@@ -41,6 +41,7 @@ MainNav.propTypes = {
     username: PropTypes.string,
     role: PropTypes.string,
   }).isRequired,
+  handleLogout: PropTypes.func.isRequired,
 };
 
 export default MainNav;

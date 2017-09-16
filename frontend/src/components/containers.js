@@ -2,10 +2,16 @@ import { connect } from 'react-redux';
 
 import LoginForm from './ui/LoginForm';
 import MainNav from './ui/MainNav';
-import { login, changeLoginForm } from '../actions';
+import { login, logout, changeLoginForm } from '../actions';
 
 export const MainNavContainer = connect(
   state => ({ loggedOnUser: state.loggedOnUser }),
+  dispatch => ({
+    handleLogout(e) {
+      e.preventDefault();
+      dispatch(logout());
+    },
+  }),
 )(MainNav);
 
 export const LoginFormContainer = connect(
