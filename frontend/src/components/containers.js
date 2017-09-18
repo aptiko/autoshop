@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 
 import LoginForm from './ui/LoginForm';
 import MainNav from './ui/MainNav';
+import UserList from './ui/UserList';
 import { login, logout, changeLoginForm } from '../actions';
 
 export const MainNavContainer = connect(
@@ -15,11 +16,7 @@ export const MainNavContainer = connect(
 )(MainNav);
 
 export const LoginFormContainer = connect(
-  state => ({
-    username: state.loginForm.username,
-    password: state.loginForm.password,
-    error: state.loginForm.error,
-  }),
+  state => ({ ...state.loginForm }),
   dispatch => ({
     handleChange(x) {
       dispatch(changeLoginForm(x.target.name, x.target.value));
@@ -30,3 +27,11 @@ export const LoginFormContainer = connect(
     },
   }),
 )(LoginForm);
+
+export const UserListContainer = connect(
+  state => ({
+    users: [...state.users].sort(
+      (a, b) => a.username.localeCompare(b.username),
+    ),
+  }),
+)(UserList);

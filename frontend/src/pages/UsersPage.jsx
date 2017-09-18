@@ -2,11 +2,12 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 
 import PageTemplate from './PageTemplate';
+import { UserListContainer } from '../components/containers'
 
-const UsersPage = ({ user }) => (
-  <PageTemplate user={user}>
+const UsersPage = () => (
+  <PageTemplate>
     <div className="container">
-      <p>The list of users will soon be shown here.</p>
+      <UserListContainer />
     </div>
   </PageTemplate>
 );
