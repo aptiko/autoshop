@@ -185,11 +185,10 @@ export const login = (username, password) => (dispatch) => {
     }));
 };
 
-export const logout = () => dispatch =>
-  dispatch({ type: C.LOGOUT });
+export const logout = () => ({ type: C.LOGOUT });
 
-export const changeLoginForm = (name, value) => dispatch =>
-  dispatch({
+export const changeLoginForm = (name, value) =>
+  ({
     type: C.CHANGE_LOGIN_FORM,
     username: name === 'username' ? value : null,
     password: name === 'password' ? value : null,

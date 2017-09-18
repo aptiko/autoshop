@@ -40,7 +40,8 @@
       "./__tests__/global.js"
     ],
     "modulePathIgnorePatterns": [
-      "global.js"
+      "global.js",
+      "local-storage-mock.js"
     ]
   }
 }

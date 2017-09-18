@@ -1,0 +1,15 @@
+{
+  "repairs": [],
+  "users": [],
+  "loggedOnUser": {
+    "id": 0,
+    "username": "",
+    "role": "",
+    "authToken": ""
+  },
+  "loginForm": {
+    "username": "",
+    "password": "",
+    "error": false
+  }
+}

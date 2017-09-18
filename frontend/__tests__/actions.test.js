@@ -1,10 +1,12 @@
+import 'isomorphic-fetch';
 import fetchMock from 'fetch-mock';
 
 import storeFactory from '../src/store';
 import { addRepair, editRepair, removeRepair, addUser, editUser,
-  removeUser, login, changeLoginForm } from '../src/actions';
+  removeUser, login, logout, changeLoginForm } from '../src/actions';
 import C from '../src/constants';
 import { testUsers, testRepairs } from './global';
+import './local-storage-mock';
 
 describe('addRepair action creator', () => {
   let store;
@@ -336,7 +338,27 @@ describe('login action creator', () => {
   let store;
 
   beforeAll(() => {
-    fetchMock.post('end:/login/', {});
+    fetchMock.getOnce(
+      'end:/api/',
+      new Response(
+        '',
+        {
+          headers: {
+            'Set-Cookie': 'csrftoken=topsecrettoken; Max-Age=31449600; Path=/',
+          },
+        }),
+    );
+    fetchMock.postOnce(
+      'end:/login/',
+      new Response(
+        '{ "key": "topsecretkey" }',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }),
+    );
+    fetchMock.getOnce('end:/rest-auth/user/?username=alice', {});
     store = storeFactory({ users: testUsers });
     store.dispatch(login('alice', 'topsecret'));
   });
@@ -347,23 +369,41 @@ describe('login action creator', () => {
 
   it('calls fetch as needed', () =>
     fetchMock.flush().then(() => {
-      expect(fetchMock.lastCall('end:/login/')[1].method).toBe('POST');
+      expect(fetchMock.done()).toBe(true);
     }),
   );
 });
 
 describe('logout action creator', () => {
-  console.log('fixme');
+  it('logs out', () => {
+    const store = storeFactory({
+      loggedOnUser: {
+        id: 1,
+        username: 'alice',
+        role: C.NORMAL_USER,
+        authToken: 'topsecretkey',
+      },
+    });
+    store.dispatch(logout());
+    expect(store.getState().loggedOnUser).toEqual({
+      id: 0,
+      username: '',
+      role: '',
+      authToken: '',
+    });
+  });
 });
 
 describe('changeLoginForm action creator', () => {
   let store;
 
   beforeEach(() => {
+    localStorage.clear();
     store = storeFactory({
       loginForm: {
         username: 'alice',
         password: 'topsecret',
+        error: false,
       },
     });
   });

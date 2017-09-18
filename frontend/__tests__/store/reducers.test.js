@@ -203,11 +203,13 @@ describe('loggedOnUser reducer', () => {
       id: 1,
       username: 'alice',
       role: C.NORMAL_USER,
+      authToken: 'topsecret',
     }, action);
     expect(result).toEqual({
       id: 0,
       username: '',
       role: '',
+      authToken: '',
     });
   });
 });
@@ -216,7 +218,7 @@ describe('loginForm reducer', () => {
   let initialState;
 
   beforeEach(() => {
-    initialState = { username: 'alice', password: 'topsecret' };
+    initialState = { username: 'alice', password: 'topsecret', error: false };
   });
 
   it('changes username', () => {
@@ -230,6 +232,7 @@ describe('loginForm reducer', () => {
     expect(result).toEqual({
       username: 'bob',
       password: 'topsecret',
+      error: false,
     });
   });
 
@@ -244,6 +247,7 @@ describe('loginForm reducer', () => {
     expect(result).toEqual({
       username: 'alice',
       password: 'verysecret',
+      error: false,
     });
   });
 });
