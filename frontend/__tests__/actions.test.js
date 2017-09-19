@@ -3,7 +3,8 @@ import fetchMock from 'fetch-mock';
 
 import storeFactory from '../src/store';
 import { addRepair, editRepair, removeRepair, addUser, editUser,
-  removeUser, login, logout, changeLoginForm } from '../src/actions';
+  removeUser, login, logout, changeLoginForm, fetchUsers }
+  from '../src/actions';
 import C from '../src/constants';
 import { testUsers, testRepairs } from './global';
 import './local-storage-mock';
@@ -398,7 +399,6 @@ describe('changeLoginForm action creator', () => {
   let store;
 
   beforeEach(() => {
-    localStorage.clear();
     store = storeFactory({
       loginForm: {
         username: 'alice',
@@ -419,4 +419,45 @@ describe('changeLoginForm action creator', () => {
     expect(store.getState().loginForm.username).toEqual('alice');
     expect(store.getState().loginForm.password).toEqual('verysecret');
   });
+});
+
+describe('fetchUsers action creator', () => {
+  let store;
+  const testUsersFromApi = [
+    {
+      id: 1,
+      username: 'alice',
+      is_staff: false,
+    }, {
+      id: 2,
+      username: 'bob',
+      is_staff: true,
+    }, {
+      id: 3,
+      username: 'charlie',
+      is_staff: false,
+    },
+  ];
+
+  beforeAll(() => {
+    fetchMock.getOnce(
+      'end:/api/users/',
+      new Response(
+        JSON.stringify(testUsersFromApi),
+        { headers: { 'Content-Type': 'application/json' } },
+      ),
+    );
+    store = storeFactory({ users: [] });
+    store.dispatch(fetchUsers());
+  });
+
+  afterAll(() => {
+    fetchMock.restore();
+  });
+
+  it('calls fetch as needed', () =>
+    fetchMock.flush().then(() => {
+      expect(fetchMock.done()).toBe(true);
+    }),
+  );
 });

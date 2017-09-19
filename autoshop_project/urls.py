@@ -15,7 +15,7 @@ class MainView(View):
 
     def get(self, request, *args, **kwargs):
         filename = self.request.path[1:]
-        if not filename:
+        if not filename.startswith('assets'):
             filename = 'index.html'
         with open(os.path.join('frontend', 'dist', filename)) as f:
             return HttpResponse(f.read())

@@ -68,6 +68,8 @@ const user = (state = {}, action) => {
 
 export const users = (state = [], action) => {
   switch (action.type) {
+    case C.FETCHED_USERS:
+      return action.users;
     case C.ADD_USER:
       return [
         ...state,
@@ -122,6 +124,17 @@ export const loginForm = (state = {}, action) => {
         error: false,
       };
 
+    default:
+      return state;
+  }
+};
+
+export const loadingUsers = (state = {}, action) => {
+  switch (action.type) {
+    case C.FETCHED_USERS:
+      return false;
+    case C.START_FETCHING_USERS:
+      return true;
     default:
       return state;
   }

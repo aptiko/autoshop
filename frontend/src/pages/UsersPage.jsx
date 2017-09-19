@@ -12,8 +12,4 @@ const UsersPage = () => (
   </PageTemplate>
 );
 
-UsersPage.propTypes = {
-  user: PropTypes.object.isRequired,
-};
-
 export default UsersPage;

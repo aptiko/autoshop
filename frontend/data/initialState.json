@@ -1,6 +1,7 @@
 {
   "repairs": [],
   "users": [],
+  "loadingUsers": false,
   "loggedOnUser": {
     "id": 0,
     "username": "",

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import LoginForm from './ui/LoginForm';
 import MainNav from './ui/MainNav';
 import UserList from './ui/UserList';
-import { login, logout, changeLoginForm } from '../actions';
+import { login, logout, changeLoginForm, fetchUsers } from '../actions';
 
 export const MainNavContainer = connect(
   state => ({ loggedOnUser: state.loggedOnUser }),
@@ -33,5 +33,12 @@ export const UserListContainer = connect(
     users: [...state.users].sort(
       (a, b) => a.username.localeCompare(b.username),
     ),
+    loading: state.loadingUsers,
+  }),
+  dispatch => ({
+    onClickReload(x) {
+      x.preventDefault();
+      dispatch(fetchUsers());
+    },
   }),
 )(UserList);

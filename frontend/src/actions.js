@@ -193,3 +193,25 @@ export const changeLoginForm = (name, value) =>
     username: name === 'username' ? value : null,
     password: name === 'password' ? value : null,
   });
+
+export const fetchUsers = () => (dispatch, getState) => {
+  dispatch({ type: C.START_FETCHING_USERS });
+  fetch(
+    '/api/users/',
+    {
+      headers: {
+        Authorization: `Token ${getState().loggedOnUser.authToken}`,
+      },
+    },
+  )
+    .then(response => response.json())
+    .then(obj => ({
+      type: C.FETCHED_USERS,
+      users: obj.map(x => ({
+        id: x.id,
+        username: x.username,
+        role: x.is_staff ? C.SUPERUSER : C.NORMAL_USER,
+      })),
+    }))
+    .then(dispatch);
+};

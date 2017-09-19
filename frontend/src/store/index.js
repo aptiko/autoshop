@@ -1,7 +1,8 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
-import { repairs, users, loggedOnUser, loginForm } from './reducers';
+import { repairs, users, loggedOnUser, loginForm, loadingUsers }
+  from './reducers';
 import theInitialState from '../../data/initialState.json';
 
 const saver = store => next => (action) => {
@@ -12,7 +13,7 @@ const saver = store => next => (action) => {
 
 const storeFactory = (initialState = theInitialState) =>
   applyMiddleware(thunk, saver)(createStore)(
-    combineReducers({ repairs, users, loggedOnUser, loginForm }),
+    combineReducers({ repairs, users, loggedOnUser, loginForm, loadingUsers }),
     (localStorage.getItem('redux-store')) ?
       JSON.parse(localStorage.getItem('redux-store')) : initialState);
 

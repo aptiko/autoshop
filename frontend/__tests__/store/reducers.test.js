@@ -175,6 +175,15 @@ describe('users reducer', () => {
     const result = users(testUsers, action);
     expect(result).toEqual(testUsers);
   });
+
+  it('fetches users', () => {
+    const action = {
+      type: C.FETCHED_USERS,
+      users: testUsers,
+    };
+    deepFreeze(action);
+    expect(users([], action)).toEqual(testUsers);
+  });
 });
 
 describe('loggedOnUser reducer', () => {

@@ -6,6 +6,7 @@ import C from '../../../src/constants';
 import { UserListContainer } from '../../../src/components/containers';
 
 jest.mock('../../../src/components/ui/UserList');
+jest.mock('../../../src/actions');
 
 describe('<UserListContainer />', () => {
   let wrapper;
@@ -53,5 +54,14 @@ describe('<UserListContainer />', () => {
     expect(result.props().users[0].username).toBe('alice');
     expect(result.props().users[1].id).toBe(1);
     expect(result.props().users[1].username).toBe('bob');
+  });
+
+  it('dispatches a FETCHED_USERS action', () => {
+    const e = { preventDefault: f => f };
+    wrapper.find('UserListMock').props().onClickReload(e);
+    expect(store.dispatch.mock.calls[0][0]).toEqual({
+      type: C.FETCHED_USERS,
+      users: [],
+    });
   });
 });
