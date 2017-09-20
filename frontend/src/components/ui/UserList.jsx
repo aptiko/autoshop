@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 
 import User from './User';
 
-const UserList = ({ users, loading, onClickReload }) => (
+const UserList = ({ users, loading, onClickReload, onUserDelete }) => (
   <div id="users">
     <h1>
       Users <small>
@@ -25,10 +25,19 @@ const UserList = ({ users, loading, onClickReload }) => (
           <th />
           <th>Username</th>
           <th>Type</th>
+          <th />
         </tr>
       </thead>
       <tbody>
-        {users.map(x => <User key={x.id} user={x} />)}
+        {
+          users.map(x => (
+            <User
+              key={x.id}
+              user={x}
+              onUserDelete={e => onUserDelete(e, x.id)}
+            />),
+          )
+        }
       </tbody>
     </table>
   </div>
@@ -38,6 +47,7 @@ UserList.propTypes = {
   users: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
   onClickReload: PropTypes.func.isRequired,
+  onUserDelete: PropTypes.func.isRequired,
 };
 
 export default UserList;

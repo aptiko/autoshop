@@ -12,5 +12,6 @@
     "username": "",
     "password": "",
     "error": false
-  }
+  },
+  "errorMessage": ""
 }

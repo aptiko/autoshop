@@ -5,12 +5,14 @@ import history from './history';
 import RepairsPage from './pages/RepairsPage';
 import UsersPage from './pages/UsersPage';
 import LoginPage from './pages/LoginPage';
+import EditUserPage from './pages/EditUserPage';
 
 const App = () => (
   <Router history={history}>
     <div>
       <Route exact path="/" component={() => <RepairsPage />} />
-      <Route path="/users" component={() => <UsersPage />} />
+      <Route exact path="/users" component={() => <UsersPage />} />
+      <Route path="/users/:userId/edit" component={() => <EditUserPage />} />
       <Route path="/login" component={() => <LoginPage />} />
     </div>
   </Router>

@@ -9,6 +9,11 @@ const getCookie = (name) => {
   return (result === null) ? null : result[1];
 };
 
+export const setErrorMessage = msg => ({
+  type: C.SET_ERROR_MESSAGE,
+  errorMessage: msg,
+});
+
 export const addRepair = (assignedUserId, date, time, complete) => dispatch =>
   fetch(
     '/api/repairs/',
@@ -95,28 +100,38 @@ export const addUser = (username, role) => dispatch =>
     }),
   ).then(dispatch);
 
-export const editUser = (id, username, role) => dispatch =>
+export const editUser = (id, username, role) => (dispatch, getState) =>
   fetch(
     `/api/users/${id}/`,
     {
       method: 'PUT',
       credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${getState().loggedOnUser.authToken}`,
+      },
       body: JSON.stringify({
         id,
         username,
         is_staff: role === C.SUPERUSER,
       }),
     },
-  ).then(response => response.json(),
-  ).then(obj =>
-    ({
+  )
+    .then(
+      response => (response.ok ? response.json() :
+        response.text().then((t) => {
+          throw new Error(`Could not edit user; the server responded: ${t}`);
+        })),
+    )
+    .then(obj => ({
       type: C.EDIT_USER,
       id: obj.id,
       username: obj.username,
       role: obj.is_superuser ? C.SUPERUSER : C.NORMAL_USER,
-    }),
-  ).then(dispatch);
+    }))
+    .then(dispatch)
+    .then(() => history.push('/users'))
+    .catch(err => dispatch(setErrorMessage(err.message)));
 
 export const removeUser = id => dispatch =>
   fetch(

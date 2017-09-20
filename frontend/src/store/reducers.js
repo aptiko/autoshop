@@ -139,3 +139,12 @@ export const loadingUsers = (state = {}, action) => {
       return state;
   }
 };
+
+export const errorMessage = (state = '', action) => {
+  switch (action.type) {
+    case C.SET_ERROR_MESSAGE:
+      return action.errorMessage;
+    default:
+      return state;
+  }
+};
