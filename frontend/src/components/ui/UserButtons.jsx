@@ -12,6 +12,7 @@ const UserButtons = ({ userId, onClickDelete }) => (
       <span className="glyphicon glyphicon-pencil" aria-hidden="true" />
     </Link>
     <button
+      id={`delete-user-${userId}`}
       type="button"
       className="btn btn-default btn-remove"
       aria-label="Left Align"

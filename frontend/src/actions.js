@@ -78,27 +78,39 @@ export const removeRepair = id => dispatch =>
   ).then(() => ({ type: C.REMOVE_REPAIR, id }),
   ).then(dispatch);
 
-export const addUser = (username, role) => dispatch =>
+export const addUser = (username, role) => (dispatch, getState) =>
   fetch(
     '/api/users/',
     {
       method: 'POST',
       credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${getState().loggedOnUser.authToken}`,
+      },
       body: JSON.stringify({
         username,
         is_staff: role === C.SUPERUSER,
       }),
     },
-  ).then(response => response.json(),
-  ).then(
-    obj => ({
-      type: C.ADD_USER,
-      id: obj.id,
-      username: obj.username,
-      role: obj.is_superuser ? C.SUPERUSER : C.NORMAL_USER,
-    }),
-  ).then(dispatch);
+  )
+    .then(
+      response => (response.ok ? response.json() :
+        response.text().then((t) => {
+          throw new Error(`Could not add user; the server responded: ${t}`);
+        })),
+    )
+    .then(
+      obj => ({
+        type: C.ADD_USER,
+        id: obj.id,
+        username: obj.username,
+        role: obj.is_staff ? C.SUPERUSER : C.NORMAL_USER,
+      }),
+    )
+    .then(dispatch)
+    .then(() => history.push('/users'))
+    .catch(err => dispatch(setErrorMessage(err.message)));
 
 export const editUser = (id, username, role) => (dispatch, getState) =>
   fetch(
@@ -133,15 +145,26 @@ export const editUser = (id, username, role) => (dispatch, getState) =>
     .then(() => history.push('/users'))
     .catch(err => dispatch(setErrorMessage(err.message)));
 
-export const removeUser = id => dispatch =>
+export const removeUser = id => (dispatch, getState) =>
   fetch(
     `/api/users/${id}/`,
     {
       method: 'DELETE',
       credentials: 'same-origin',
+      headers: {
+        Authorization: `Token ${getState().loggedOnUser.authToken}`,
+      },
     },
-  ).then(() => ({ type: C.REMOVE_USER, id }),
-  ).then(dispatch);
+  )
+    .then(
+      response => (response.ok ? null :
+        response.text().then((t) => {
+          throw new Error(`Could not delete user; the server responded: ${t}`);
+        })),
+    )
+    .then(() => ({ type: C.REMOVE_USER, id }))
+    .then(dispatch)
+    .catch(err => dispatch(setErrorMessage(err.message)));
 
 export const login = (username, password) => (dispatch) => {
   const action = {
@@ -170,7 +193,7 @@ export const login = (username, password) => (dispatch) => {
     ))
     .then(
       (response) => {
-        if (response.status !== 200) {
+        if (!response.ok) {
           throw new Error();
         }
         return response.json();

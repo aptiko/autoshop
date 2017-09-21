@@ -6,8 +6,9 @@ import MainNav from './ui/MainNav';
 import UserList from './ui/UserList';
 import UserForm from './ui/UserForm';
 import Message from './ui/Message';
-import { login, logout, changeLoginForm, fetchUsers, editUser }
-  from '../actions';
+import {
+  login, logout, changeLoginForm, fetchUsers, editUser, addUser, removeUser,
+} from '../actions';
 import { findById } from '../lib/array-helpers';
 
 export const MainNavContainer = connect(
@@ -45,26 +46,30 @@ export const UserListContainer = connect(
       x.preventDefault();
       dispatch(fetchUsers());
     },
-    onUserDelete() {
-      dispatch(false);
+    onUserDelete(e) {
+      const userId = parseInt(e.target.id.split('-')[2], 10);
+      dispatch(removeUser(userId));
     },
   }),
 )(UserList);
 
 export const UserFormContainer = connect(
-  (state, props) => ({
-    ...findById(state.users, props.userId),
-    password: '',
-    password2: '',
-  }),
+  (state, props) => {
+    const defaultResult = {
+      id: props.userId,
+      username: '',
+      role: C.NORMAL_USER,
+    };
+    return props.userId ? findById(state.users, props.userId) : defaultResult;
+  },
   dispatch => ({
     handleSubmit(e) {
       e.preventDefault();
-      dispatch(editUser(
-        e.target.userId.value,
-        e.target.username.value,
-        e.target.isSuperuser.checked ? C.SUPERUSER : C.NORMAL_USER,
-      ));
+      const userId = parseInt(e.target.userId.value, 10);
+      const username = e.target.username.value;
+      const role = e.target.isSuperuser.checked ? C.SUPERUSER : C.NORMAL_USER;
+      dispatch(userId ?
+        editUser(userId, username, role) : addUser(username, role));
     },
   }),
 )(UserForm);

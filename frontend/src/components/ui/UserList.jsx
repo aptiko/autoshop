@@ -1,5 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import User from './User';
 
@@ -9,7 +10,7 @@ const UserList = ({ users, loading, onClickReload, onUserDelete }) => (
       Users <small>
         {
           loading ?
-            <span onClick={onClickReload}>Loading...</span> :
+            'Loading...' :
             <a
               role="button"
               className="btn btn-default"
@@ -38,6 +39,22 @@ const UserList = ({ users, loading, onClickReload, onUserDelete }) => (
             />),
           )
         }
+        <tr className="add-user">
+          <td>
+            <Link
+              to={'/users/0/edit'}
+              className="btn btn-default btn-add"
+              aria-label="Left Align"
+            >
+              <span
+                className="glyphicon glyphicon-plus"
+                aria-hidden="true"
+              />
+            </Link>
+          </td>
+          <td colSpan="3" />
+        </tr>
+
       </tbody>
     </table>
   </div>

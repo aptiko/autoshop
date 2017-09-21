@@ -17,6 +17,7 @@ const storeFactory = (initialState = theInitialState) =>
       repairs, users, loggedOnUser, loginForm, loadingUsers, errorMessage,
     }),
     (localStorage.getItem('redux-store')) ?
-      JSON.parse(localStorage.getItem('redux-store')) : initialState);
+      JSON.parse(localStorage.getItem('redux-store')) : initialState,
+  );
 
 export default storeFactory;
