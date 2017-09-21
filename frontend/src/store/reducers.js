@@ -27,6 +27,8 @@ const repair = (state = {}, action) => {
 
 export const repairs = (state = [], action) => {
   switch (action.type) {
+    case C.FETCHED_REPAIRS:
+      return action.repairs;
     case C.ADD_REPAIR:
       return [
         ...state,
@@ -129,12 +131,24 @@ export const loginForm = (state = {}, action) => {
   }
 };
 
-export const loadingUsers = (state = {}, action) => {
+export const loadingUsers = (state = false, action) => {
   switch (action.type) {
     case C.FETCHED_USERS:
     case C.STOP_FETCHING_USERS:
       return false;
     case C.START_FETCHING_USERS:
+      return true;
+    default:
+      return state;
+  }
+};
+
+export const loadingRepairs = (state = false, action) => {
+  switch (action.type) {
+    case C.FETCHED_REPAIRS:
+    case C.STOP_FETCHING_REPAIRS:
+      return false;
+    case C.START_FETCHING_REPAIRS:
       return true;
     default:
       return state;

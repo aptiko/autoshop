@@ -3,6 +3,8 @@ import 'isomorphic-fetch';
 import C from './constants';
 import history from './history';
 
+import { findById } from './lib/array-helpers';
+
 const getCookie = (name) => {
   const regexp = new RegExp(`(?:^${name}|;\\s*${name})=(.*?)(?:;|$)`, 'g');
   const result = regexp.exec(document.cookie);
@@ -14,40 +16,57 @@ export const setErrorMessage = msg => ({
   errorMessage: msg,
 });
 
-export const addRepair = (assignedUserId, date, time, complete) => dispatch =>
-  fetch(
-    '/api/repairs/',
-    {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        assigned_user: assignedUserId,
-        date: date.toISOString().slice(0, 10),
-        time,
-        complete,
-      }),
-    },
-  ).then(response => response.json(),
-  ).then(
-    obj => ({
-      type: C.ADD_REPAIR,
-      id: obj.id,
-      assignedUser: obj.assigned_user,
-      date: new Date(obj.date),
-      time: obj.time.slice(0, 5),
-      complete: obj.complete,
-    }),
-  ).then(dispatch);
+export const addRepair = (assignedUserId, date, time, complete) =>
+  (dispatch, getState) =>
+    fetch(
+      '/api/repairs/',
+      {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${getState().loggedOnUser.authToken}`,
+        },
+        body: JSON.stringify({
+          assigned_user: assignedUserId,
+          date: date.toISOString().slice(0, 10),
+          time,
+          complete,
+        }),
+      },
+    )
+      .then(
+        response => (response.ok ? response.json() :
+          response.text().then((t) => {
+            throw new Error(
+              `Could not add repair; the server responded: ${t}`);
+          })),
+      )
+      .then(
+        obj => ({
+          type: C.ADD_REPAIR,
+          id: obj.id,
+          assignedUser: findById(getState().users, obj.assigned_user),
+          date: new Date(obj.date),
+          time: obj.time.slice(0, 5),
+          complete: obj.complete,
+        }),
+      )
+      .then(dispatch)
+      .then(() => history.push('/'))
+      .catch(err => dispatch(setErrorMessage(err.message)));
 
 export const editRepair = (assignedUserId, id, date, time, complete) =>
-  dispatch =>
+  (dispatch, getState) =>
     fetch(
       `/api/repairs/${id}/`,
       {
         method: 'PUT',
         credentials: 'same-origin',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${getState().loggedOnUser.authToken}`,
+        },
         body: JSON.stringify({
           assigned_user: assignedUserId,
           id,
@@ -55,28 +74,48 @@ export const editRepair = (assignedUserId, id, date, time, complete) =>
           time,
           complete,
         }),
-      },
-    ).then(response => response.json(),
-    ).then(
-      obj => ({
-        type: C.EDIT_REPAIR,
-        id: obj.id,
-        assignedUser: obj.assigned_user,
-        date: new Date(obj.date),
-        time: obj.time.slice(0, 5),
-        complete: obj.complete,
-      }),
-    ).then(dispatch);
+      })
+      .then(
+        response => (response.ok ? response.json() :
+          response.text().then((t) => {
+            throw new Error(
+              `Could not edit repair; the server responded: ${t}`);
+          })),
+      )
+      .then(
+        obj => ({
+          type: C.EDIT_REPAIR,
+          id: obj.id,
+          assignedUser: findById(getState().users, obj.assigned_user),
+          date: new Date(obj.date),
+          time: obj.time.slice(0, 5),
+          complete: obj.complete,
+        }))
+      .then(dispatch)
+      .then(() => history.push('/'))
+      .catch(err => dispatch(setErrorMessage(err.message)));
 
-export const removeRepair = id => dispatch =>
+export const removeRepair = id => (dispatch, getState) =>
   fetch(
     `/api/repairs/${id}/`,
     {
       method: 'DELETE',
       credentials: 'same-origin',
+      headers: {
+        Authorization: `Token ${getState().loggedOnUser.authToken}`,
+      },
     },
-  ).then(() => ({ type: C.REMOVE_REPAIR, id }),
-  ).then(dispatch);
+  )
+    .then(
+      response => (response.ok ? null :
+        response.text().then((t) => {
+          throw new Error(
+            `Could not delete repair; the server responded: ${t}`);
+        })),
+    )
+    .then(() => ({ type: C.REMOVE_REPAIR, id }))
+    .then(dispatch)
+    .catch(err => dispatch(setErrorMessage(err.message)));
 
 export const addUser = (username, role) => (dispatch, getState) =>
   fetch(
@@ -254,6 +293,34 @@ export const fetchUsers = () => (dispatch, getState) => {
     .then(dispatch)
     .catch((err) => {
       dispatch({ type: C.STOP_FETCHING_USERS });
+      dispatch(setErrorMessage(err.message));
+    });
+};
+
+export const fetchRepairs = () => (dispatch, getState) => {
+  dispatch({ type: C.START_FETCHING_REPAIRS });
+  fetch(
+    '/api/repairs/',
+    {
+      headers: {
+        Authorization: `Token ${getState().loggedOnUser.authToken}`,
+      },
+    },
+  )
+    .then(response => response.json())
+    .then(obj => ({
+      type: C.FETCHED_REPAIRS,
+      repairs: obj.map(x => ({
+        id: x.id,
+        date: new Date(x.date),
+        time: x.time,
+        assignedUser: findById(getState().users, x.assigned_user),
+        complete: x.complete,
+      })),
+    }))
+    .then(dispatch)
+    .catch((err) => {
+      dispatch({ type: C.STOP_FETCHING_REPAIRS });
       dispatch(setErrorMessage(err.message));
     });
 };

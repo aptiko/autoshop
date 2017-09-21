@@ -5,9 +5,12 @@ import LoginForm from './ui/LoginForm';
 import MainNav from './ui/MainNav';
 import UserList from './ui/UserList';
 import UserForm from './ui/UserForm';
+import RepairForm from './ui/RepairForm';
+import RepairList from './ui/RepairList';
 import Message from './ui/Message';
 import {
   login, logout, changeLoginForm, fetchUsers, editUser, addUser, removeUser,
+  fetchRepairs, editRepair, addRepair, removeRepair,
 } from '../actions';
 import { findById } from '../lib/array-helpers';
 
@@ -53,6 +56,23 @@ export const UserListContainer = connect(
   }),
 )(UserList);
 
+export const RepairListContainer = connect(
+  state => ({
+    repairs: state.repairs,
+    loading: state.loadingRepairs,
+  }),
+  dispatch => ({
+    onClickReload(x) {
+      x.preventDefault();
+      dispatch(fetchRepairs());
+    },
+    onRepairDelete(e) {
+      const repairId = parseInt(e.target.id.split('-')[2], 10);
+      dispatch(removeRepair(repairId));
+    },
+  }),
+)(RepairList);
+
 export const UserFormContainer = connect(
   (state, props) => {
     const defaultResult = {
@@ -73,6 +93,38 @@ export const UserFormContainer = connect(
     },
   }),
 )(UserForm);
+
+export const RepairFormContainer = connect(
+  (state, props) => {
+    let result = {
+      id: props.repairId,
+      date: new Date('1971-01-01'),
+      time: '00:00',
+      assignedUser: null,
+      complete: false,
+      users: state.users,
+    };
+    if (props.repairId) {
+      result = findById(state.repairs, props.repairId);
+      result.date = new Date(result.date);
+    }
+    return result;
+  },
+  dispatch => ({
+    handleSubmit(e) {
+      e.preventDefault();
+      const repairId = parseInt(e.target.repairId.value, 10);
+      const date = new Date(e.target.date.value);
+      const time = e.target.time.value;
+      const userId = parseInt(e.target.assignedUser.value, 10);
+      const complete = e.target.complete.checked;
+      dispatch(repairId ?
+        editRepair(userId, repairId, date, time, complete)
+        :
+        addRepair(userId, date, time, complete));
+    },
+  }),
+)(RepairForm);
 
 export const MessageContainer = connect(
   (state) => {

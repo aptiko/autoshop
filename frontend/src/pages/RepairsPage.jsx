@@ -1,11 +1,12 @@
 import React from 'react';
 
 import PageTemplate from './PageTemplate';
+import { RepairListContainer } from '../components/containers';
 
 const RepairsPage = () => (
   <PageTemplate>
     <div className="container">
-      <p>The list of repairs will soon be shown here.</p>
+      <RepairListContainer />
     </div>
   </PageTemplate>
 );
