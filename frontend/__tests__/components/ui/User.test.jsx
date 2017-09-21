@@ -12,16 +12,17 @@ describe('<User /> UI element', () => {
   };
 
   it('displays the user id', () =>
-    expect(shallow(<User user={user} />).find('td.user-id').text()).toBe('47'),
+    expect(shallow(<User user={user} onUserDelete={f => f} />)
+      .find('td.user-id').text()).toBe('47'),
   );
 
   it('displays the username', () =>
-    expect(shallow(<User user={user} />).find('td.user-username').text())
-      .toBe('alice'),
+    expect(shallow(<User user={user} onUserDelete={f => f} />)
+      .find('td.user-username').text()).toBe('alice'),
   );
 
   it('displays the role', () =>
-    expect(shallow(<User user={user} />).find('td.user-role').text())
-      .toBe('Normal user'),
+    expect(shallow(<User user={user} onUserDelete={f => f} />)
+      .find('td.user-role').text()).toBe('Normal user'),
   );
 });

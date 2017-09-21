@@ -8,13 +8,23 @@ import { testUsers } from '../../global';
 describe('<UserList /> UI element', () => {
   it('displays three users', () =>
     expect(shallow(
-      <UserList users={testUsers} loading={false} onClickReload={f => f} />,
+      <UserList
+        users={testUsers}
+        loading={false}
+        onClickReload={f => f}
+        onUserDelete={f => f}
+      />,
     ).find('User').length).toBe(3),
   );
 
   it('displays correct users', () => {
     const wrapper = shallow(
-      <UserList users={testUsers} loading={false} onClickReload={f => f} />,
+      <UserList
+        users={testUsers}
+        loading={false}
+        onClickReload={f => f}
+        onUserDelete={f => f}
+      />,
     );
     expect(wrapper.find('User').get(0).props.user.id).toBe(1);
     expect(wrapper.find('User').get(0).props.user.username).toBe('alice');
@@ -26,20 +36,35 @@ describe('<UserList /> UI element', () => {
 
   it('displays "loading..."', () =>
     expect(shallow(
-      <UserList users={testUsers} loading={true} onClickReload={f => f} />,
+      <UserList
+        users={testUsers}
+        loading={true}
+        onClickReload={f => f}
+        onUserDelete={f => f}
+      />,
     ).find('h1 small').text()).toBe('Loading...'),
   );
 
   it('displays Reload button', () =>
     expect(shallow(
-      <UserList users={testUsers} loading={false} onClickReload={f => f} />,
+      <UserList
+        users={testUsers}
+        loading={false}
+        onClickReload={f => f}
+        onUserDelete={f => f}
+      />,
     ).find('h1 small a').text()).toBe('Reload'),
   );
 
   it('invokes onClickReload', () => {
     const click = jest.fn();
     shallow(
-      <UserList users={testUsers} loading={false} onClickReload={click} />,
+      <UserList
+        users={testUsers}
+        loading={false}
+        onClickReload={click}
+        onUserDelete={f => f}
+      />,
     ).find('h1 small a').simulate('click');
     expect(click).toBeCalled();
   });
