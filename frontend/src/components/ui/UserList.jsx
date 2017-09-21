@@ -9,7 +9,7 @@ const UserList = ({ users, loading, onClickReload, onUserDelete }) => (
       Users <small>
         {
           loading ?
-            'Loading...' :
+            <span onClick={onClickReload}>Loading...</span> :
             <a
               role="button"
               className="btn btn-default"

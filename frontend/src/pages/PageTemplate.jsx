@@ -1,10 +1,11 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { MainNavContainer } from '../components/containers';
+import { MainNavContainer, MessageContainer } from '../components/containers';
 
 const PageTemplate = ({ children }) => (
   <div className="main">
     <MainNavContainer />
+    <MessageContainer />
     {children}
   </div>
 );

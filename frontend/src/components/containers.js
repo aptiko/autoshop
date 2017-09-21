@@ -5,6 +5,7 @@ import LoginForm from './ui/LoginForm';
 import MainNav from './ui/MainNav';
 import UserList from './ui/UserList';
 import UserForm from './ui/UserForm';
+import Message from './ui/Message';
 import { login, logout, changeLoginForm, fetchUsers, editUser }
   from '../actions';
 import { findById } from '../lib/array-helpers';
@@ -51,21 +52,11 @@ export const UserListContainer = connect(
 )(UserList);
 
 export const UserFormContainer = connect(
-  (state, props) => {
-    const result = {
-      ...findById(state.users, props.userId),
-      password: '',
-      password2: '',
-      errorMessage: state.errorMessage,
-    };
-
-    /* Ensure the error message shows only once. We send it to UserForm by
-     * sending it the "result" above, but now we reset it.
-     */
-    state.errorMessage = ''; // eslint-disable-line no-param-reassign
-
-    return result;
-  },
+  (state, props) => ({
+    ...findById(state.users, props.userId),
+    password: '',
+    password2: '',
+  }),
   dispatch => ({
     handleSubmit(e) {
       e.preventDefault();
@@ -77,3 +68,16 @@ export const UserFormContainer = connect(
     },
   }),
 )(UserForm);
+
+export const MessageContainer = connect(
+  (state) => {
+    const message = state.errorMessage;
+
+    /* Ensure the error message shows only once. We send it to UserForm by
+     * sending it the "message" above, but now we reset it.
+     */
+    state.errorMessage = ''; // eslint-disable-line no-param-reassign
+
+    return { message };
+  },
+)(Message);

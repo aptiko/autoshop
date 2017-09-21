@@ -228,5 +228,9 @@ export const fetchUsers = () => (dispatch, getState) => {
         role: x.is_staff ? C.SUPERUSER : C.NORMAL_USER,
       })),
     }))
-    .then(dispatch);
+    .then(dispatch)
+    .catch((err) => {
+      dispatch({ type: C.STOP_FETCHING_USERS });
+      dispatch(setErrorMessage(err.message));
+    });
 };

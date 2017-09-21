@@ -132,6 +132,7 @@ export const loginForm = (state = {}, action) => {
 export const loadingUsers = (state = {}, action) => {
   switch (action.type) {
     case C.FETCHED_USERS:
+    case C.STOP_FETCHING_USERS:
       return false;
     case C.START_FETCHING_USERS:
       return true;

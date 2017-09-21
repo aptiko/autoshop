@@ -4,14 +4,9 @@ import { PropTypes } from 'prop-types';
 import C from '../../constants';
 
 const UserForm = ({
-  id, username, role, error, handleSubmit, errorMessage,
+  id, username, role, handleSubmit,
 }) => (
   <form className="user-form form-horizontal" onSubmit={handleSubmit}>
-    {errorMessage ?
-      <p className="alert-danger">{errorMessage}</p>
-      :
-      ''
-    }
     <input type="hidden" name="userId" value={id} />
     <div className="form-group">
       <label
@@ -54,7 +49,6 @@ UserForm.propTypes = {
   id: PropTypes.number.isRequired,
   username: PropTypes.string.isRequired,
   role: PropTypes.string.isRequired,
-  errorMessage: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 
