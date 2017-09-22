@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
+import C from '../../constants';
 import UsersMenuItem from './UsersMenuItem';
 
 const MainNav = ({ loggedOnUser, handleLogout }) => (
@@ -14,11 +15,15 @@ const MainNav = ({ loggedOnUser, handleLogout }) => (
               My repairs
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/repairs" activeClassName="active">
-              All repairs
-            </NavLink>
-          </li>
+          {loggedOnUser.role === C.SUPERUSER ?
+            <li>
+              <NavLink to="/repairs" activeClassName="active">
+                All repairs
+              </NavLink>
+            </li>
+            :
+            null
+          }
           <UsersMenuItem loggedOnUser={loggedOnUser} />
         </ul>
         <ul className="nav navbar-nav navbar-right">

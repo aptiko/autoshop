@@ -3,6 +3,7 @@ import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 
+import C from './constants';
 import history from './history';
 import MyRepairsPage from './pages/MyRepairsPage';
 import RepairsPage from './pages/RepairsPage';
@@ -16,8 +17,10 @@ class App extends React.Component {
   componentDidMount() {
     /* Load users and repairs on page load */
     if (this.props.loggedOnUser.id) {
-      this.props.fetchUsers();
       this.props.fetchRepairs();
+      if (this.props.loggedOnUser.role === C.SUPERUSER) {
+        this.props.fetchUsers();
+      }
     }
   }
 

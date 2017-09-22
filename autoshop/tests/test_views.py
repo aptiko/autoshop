@@ -117,7 +117,8 @@ class RepairTestCase(APITestCase):
                                    data={'assigned_user': self.alice.id,
                                          'date': datetime.date(2017, 4, 27),
                                          'time': datetime.time(13, 45),
-                                         'complete': 'true'})
+                                         'complete': True},
+                                   format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(models.Repair.objects.count(), 2)
         updated_object = models.Repair.objects.get(pk=self.repair1.id)

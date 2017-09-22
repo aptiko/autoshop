@@ -254,7 +254,10 @@ export const fetchRepairs = () => (dispatch, getState) => {
         id: x.id,
         date: new Date(x.date),
         time: x.time,
-        assignedUser: findById(getState().users, x.assigned_user),
+        assignedUser:
+          x.assigned_user === getState().loggedOnUser.id ?
+            getState().loggedOnUser :
+            findById(getState().users, x.assigned_user),
         complete: x.complete,
       })),
     }))
@@ -265,7 +268,7 @@ export const fetchRepairs = () => (dispatch, getState) => {
     });
 };
 
-export const login = (username, password) => (dispatch) => {
+export const login = (username, password) => (dispatch, getState) => {
   const action = {
     type: C.LOGIN,
     id: 0,
@@ -337,8 +340,9 @@ export const login = (username, password) => (dispatch) => {
     })
     .then(dispatch)
     .then(() => history.push('/'))
-    .then(() => dispatch(fetchUsers()))
     .then(() => dispatch(fetchRepairs()))
+    .then(() => (getState().loggedOnUser.role === C.SUPERUSER)
+      && dispatch(fetchUsers()))
     .catch(() => dispatch({
       type: C.LOGIN,
       id: 0,

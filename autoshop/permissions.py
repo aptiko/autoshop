@@ -32,8 +32,8 @@ class RepairPermission(permissions.BasePermission):
         d = request.data
         dt = iso8601.parse_date(d['date'] + ' ' + d['time'],
                                 default_timezone=None)
-        return (d['complete'] == 'true' and
-                d['assigned_user'] == str(obj.assigned_user.id) and
+        return (d['complete'] and
+                d['assigned_user'] == obj.assigned_user.id and
                 dt == datetime.combine(obj.date, obj.time))
 
 

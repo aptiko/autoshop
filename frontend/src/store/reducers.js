@@ -27,6 +27,9 @@ const repair = (state = {}, action) => {
 
 export const repairs = (state = [], action) => {
   switch (action.type) {
+    case C.LOGOUT:
+      return [];
+
     case C.FETCHED_REPAIRS:
       return action.repairs;
 
@@ -71,6 +74,8 @@ const user = (state = {}, action) => {
 
 export const users = (state = [], action) => {
   switch (action.type) {
+    case C.LOGOUT:
+      return [];
     case C.FETCHED_USERS:
       return action.users;
     case C.ADD_USER:
