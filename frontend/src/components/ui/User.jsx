@@ -9,7 +9,7 @@ const User = ({ user, onUserDelete }) => (
     <td className="user-id">{user.id}</td>
     <td className="user-username">{user.username}</td>
     <td className="user-role">
-      {user.role === C.SUPERUSER ? 'Super user' : 'Normal user'}
+      {user.role === C.SUPERUSER ? 'Manager' : 'Normal user'}
     </td>
     <td>
       <UserButtons
