@@ -210,7 +210,7 @@ export const logout = () => ({ type: C.LOGOUT });
 
 export const fetchUsers = () => (dispatch, getState) => {
   dispatch({ type: C.START_FETCHING_USERS });
-  fetch(
+  return fetch(
     '/api/users/',
     {
       headers: {

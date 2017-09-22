@@ -18,9 +18,10 @@ class App extends React.Component {
   componentDidMount() {
     /* Load users and repairs on page load */
     if (this.props.loggedOnUser.id) {
-      this.props.fetchRepairs();
       if (this.props.loggedOnUser.role === C.SUPERUSER) {
-        this.props.fetchUsers();
+        this.props.fetchUsers().then(this.props.fetchRepairs());
+      } else {
+        this.props.fetchRepairs();
       }
     }
   }

@@ -78,6 +78,7 @@ export const RepairListContainer = connect(
         (r.assignedUser && r.assignedUser.id === state.loggedOnUser.id)),
     loading: state.loadingRepairs,
     superUserView: ownProps.superUserView,
+    users: state.users,
   }),
   dispatch => ({
     onClickReload(x) {
