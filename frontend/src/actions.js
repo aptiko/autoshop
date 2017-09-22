@@ -53,7 +53,7 @@ export const addRepair = (assignedUserId, date, time, complete) =>
         }),
       )
       .then(dispatch)
-      .then(() => history.push('/'))
+      .then(() => history.push('/repairs'))
       .catch(err => dispatch(setErrorMessage(err.message)));
 
 export const editRepair = (assignedUserId, id, date, time, complete) =>
@@ -92,7 +92,7 @@ export const editRepair = (assignedUserId, id, date, time, complete) =>
           complete: obj.complete,
         }))
       .then(dispatch)
-      .then(() => history.push('/'))
+      .then(() => history.push('/repairs'))
       .catch(err => dispatch(setErrorMessage(err.message)));
 
 export const removeRepair = id => (dispatch, getState) =>
@@ -207,13 +207,6 @@ export const removeUser = id => (dispatch, getState) =>
 
 export const logout = () => ({ type: C.LOGOUT });
 
-export const changeLoginForm = (name, value) =>
-  ({
-    type: C.CHANGE_LOGIN_FORM,
-    username: name === 'username' ? value : null,
-    password: name === 'password' ? value : null,
-  });
-
 export const fetchUsers = () => (dispatch, getState) => {
   dispatch({ type: C.START_FETCHING_USERS });
   fetch(
@@ -243,7 +236,10 @@ export const fetchUsers = () => (dispatch, getState) => {
 export const fetchRepairs = () => (dispatch, getState) => {
   dispatch({ type: C.START_FETCHING_REPAIRS });
   fetch(
-    '/api/repairs/',
+    getState().loggedOnUser.role === C.SUPERUSER ?
+      '/api/repairs/'
+      :
+      `/api/users/${getState().loggedOnUser.id}/repairs/`,
     {
       headers: {
         Authorization: `Token ${getState().loggedOnUser.authToken}`,
@@ -309,11 +305,35 @@ export const login = (username, password) => (dispatch) => {
           },
         });
     })
-    .then(response => response.json())
-    .then(obj => ({
-      ...action,
-      id: obj.pk,
-    }))
+    .then(
+      response => (response.ok ? response.json() :
+        response.text().then((t) => {
+          throw new Error(
+            `Error logging in; the server responded: ${t}`);
+        })),
+    )
+    .then((obj) => {
+      action.id = obj.pk;
+    })
+    .then(() =>
+      fetch(`/api/users/${action.id}/`,
+        {
+          headers: {
+            Authorization: `Token ${action.authToken}`,
+          },
+        }),
+    )
+    .then(
+      response => (response.ok ? response.json() :
+        response.text().then((t) => {
+          throw new Error(
+            `Error logging in; the server responded: ${t}`);
+        })),
+    )
+    .then((obj) => {
+      action.role = obj.is_staff ? C.SUPERUSER : C.NORMAL_USER;
+      return action;
+    })
     .then(dispatch)
     .then(() => history.push('/'))
     .then(() => dispatch(fetchUsers()))
@@ -327,3 +347,13 @@ export const login = (username, password) => (dispatch) => {
     }));
 };
 
+export const markComplete = repairId => (dispatch, getState) => {
+  const repair = findById(getState().repairs, repairId);
+  dispatch(editRepair(
+    repair.assignedUser.id,
+    repair.id,
+    repair.date.toIsoString().slice(0, 10),
+    repair.time,
+    true,
+  ));
+};

@@ -11,7 +11,12 @@ const MainNav = ({ loggedOnUser, handleLogout }) => (
         <ul className="nav navbar-nav">
           <li>
             <NavLink to="/" activeClassName="active">
-              Repairs
+              My repairs
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/repairs" activeClassName="active">
+              All repairs
             </NavLink>
           </li>
           <UsersMenuItem loggedOnUser={loggedOnUser} />

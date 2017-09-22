@@ -2,8 +2,8 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import {
-  repairs, users, loggedOnUser, loginForm, loadingUsers, loadingRepairs,
-  errorMessage,
+  repairs, users, loggedOnUser, loginForm,
+  loadingUsers, loadingRepairs, errorMessage,
 }
   from './reducers';
 import reallyInitialState from '../../data/initialState.json';

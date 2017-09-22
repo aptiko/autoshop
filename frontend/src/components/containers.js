@@ -9,8 +9,8 @@ import RepairForm from './ui/RepairForm';
 import RepairList from './ui/RepairList';
 import Message from './ui/Message';
 import {
-  login, logout, changeLoginForm, fetchUsers, editUser, addUser, removeUser,
-  fetchRepairs, editRepair, addRepair, removeRepair,
+  login, logout, fetchUsers, editUser, addUser, removeUser,
+  fetchRepairs, editRepair, addRepair, removeRepair, markComplete,
 } from '../actions';
 import { findById } from '../lib/array-helpers';
 
@@ -27,9 +27,6 @@ export const MainNavContainer = connect(
 export const LoginFormContainer = connect(
   state => ({ ...state.loginForm }),
   dispatch => ({
-    handleChange(x) {
-      dispatch(changeLoginForm(x.target.name, x.target.value));
-    },
     handleSubmit(x) {
       x.preventDefault();
       dispatch(login(x.target.username.value, x.target.password.value));
@@ -57,9 +54,14 @@ export const UserListContainer = connect(
 )(UserList);
 
 export const RepairListContainer = connect(
-  state => ({
-    repairs: state.repairs,
+  (state, ownProps) => ({
+    repairs: ownProps.superUserView ?
+      state.repairs
+      :
+      state.repairs.filter(r =>
+        (r.assignedUser && r.assignedUser.id === state.loggedOnUser.id)),
     loading: state.loadingRepairs,
+    superUserView: ownProps.superUserView,
   }),
   dispatch => ({
     onClickReload(x) {
@@ -69,6 +71,10 @@ export const RepairListContainer = connect(
     onRepairDelete(e) {
       const repairId = parseInt(e.target.id.split('-')[2], 10);
       dispatch(removeRepair(repairId));
+    },
+    onMarkComplete(e) {
+      const repairId = parseInt(e.target.id.split('-')[2], 10);
+      dispatch(markComplete(repairId));
     },
   }),
 )(RepairList);

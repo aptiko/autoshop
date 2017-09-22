@@ -4,10 +4,13 @@ import { Link } from 'react-router-dom';
 
 import Repair from './Repair';
 
-const RepairList = ({ repairs, loading, onClickReload, onRepairDelete }) => (
+const RepairList = ({
+  repairs, loading, onClickReload, onRepairDelete, onMarkComplete,
+  superUserView,
+}) => (
   <div id="repairs">
     <h1>
-      Repairs <small>
+      {superUserView ? 'All' : 'My' } repairs <small>
         {
           loading ?
             'Loading...' :
@@ -26,7 +29,7 @@ const RepairList = ({ repairs, loading, onClickReload, onRepairDelete }) => (
           <th />
           <th>Date</th>
           <th>Time</th>
-          <th>User</th>
+          {superUserView ? <th>User</th> : null }
           <th>Complete</th>
           <th />
         </tr>
@@ -38,6 +41,8 @@ const RepairList = ({ repairs, loading, onClickReload, onRepairDelete }) => (
               key={x.id}
               repair={x}
               onRepairDelete={e => onRepairDelete(e, x.id)}
+              onMarkComplete={e => onMarkComplete(e, x.id)}
+              superUserView={superUserView}
             />),
           )
         }
@@ -54,7 +59,7 @@ const RepairList = ({ repairs, loading, onClickReload, onRepairDelete }) => (
               />
             </Link>
           </td>
-          <td colSpan="5" />
+          <td colSpan={superUserView ? 5 : 4} />
         </tr>
 
       </tbody>
@@ -65,8 +70,10 @@ const RepairList = ({ repairs, loading, onClickReload, onRepairDelete }) => (
 RepairList.propTypes = {
   repairs: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
+  superUserView: PropTypes.bool.isRequired,
   onClickReload: PropTypes.func.isRequired,
   onRepairDelete: PropTypes.func.isRequired,
+  onMarkComplete: PropTypes.func.isRequired,
 };
 
 export default RepairList;

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 
 import history from './history';
+import MyRepairsPage from './pages/MyRepairsPage';
 import RepairsPage from './pages/RepairsPage';
 import UsersPage from './pages/UsersPage';
 import LoginPage from './pages/LoginPage';
@@ -24,10 +25,17 @@ class App extends React.Component {
     return (
       <Router history={history}>
         <div>
-          <Route exact path="/" component={() => <RepairsPage />} />
+          <Route exact path="/" component={() => <MyRepairsPage />} />
+          <Route exact path="/repairs" component={() => <RepairsPage />} />
           <Route exact path="/users" component={() => <UsersPage />} />
-          <Route path="/users/:userId/edit" component={() => <EditUserPage />} />
-          <Route path="/repairs/:repairId/edit" component={() => <EditRepairPage />} />
+          <Route
+            path="/users/:userId/edit"
+            component={() => <EditUserPage />}
+          />
+          <Route
+            path="/repairs/:repairId/edit"
+            component={() => <EditRepairPage />}
+          />
           <Route path="/login" component={() => <LoginPage />} />
         </div>
       </Router>

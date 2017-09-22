@@ -6,7 +6,7 @@ import { RepairListContainer } from '../components/containers';
 const RepairsPage = () => (
   <PageTemplate>
     <div className="container">
-      <RepairListContainer superUserView={true} />
+      <RepairListContainer superUserView={false} />
     </div>
   </PageTemplate>
 );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 
-const LoginForm = ({ username, password, error, handleChange, handleSubmit,
+const LoginForm = ({ username, password, error, handleSubmit,
 }) => (
   <form className="login-form" onSubmit={handleSubmit}>
     {error ?
@@ -14,8 +14,8 @@ const LoginForm = ({ username, password, error, handleChange, handleSubmit,
       <input
         type="text"
         name="username"
-        value={username}
-        onChange={handleChange}
+        defaultValue={username}
+        ref={f => f}
       />
     </div>
     <div className="form-group">
@@ -23,8 +23,8 @@ const LoginForm = ({ username, password, error, handleChange, handleSubmit,
       <input
         type="password"
         name="password"
-        value={password}
-        onChange={handleChange}
+        defaultValue={password}
+        ref={f => f}
       />
     </div>
     <input type="submit" value="Login" />
@@ -35,7 +35,6 @@ LoginForm.propTypes = {
   username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
   error: PropTypes.bool.isRequired,
-  handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 
-const RepairButtons = ({ repairId, onClickDelete }) => (
+export const SuperUserViewRepairButtons = ({ repairId, onClickDelete }) => (
   <div>
     <Link
       to={`/repairs/${repairId}/edit`}
@@ -23,9 +23,26 @@ const RepairButtons = ({ repairId, onClickDelete }) => (
   </div>
 );
 
-RepairButtons.propTypes = {
+SuperUserViewRepairButtons.propTypes = {
   repairId: PropTypes.number.isRequired,
   onClickDelete: PropTypes.func.isRequired,
 };
 
-export default RepairButtons;
+export const NormalViewRepairButtons = ({ repairId, onClickMarkComplete }) => (
+  <div>
+    <button
+      id={`mark-complete-${repairId}`}
+      type="button"
+      className="btn btn-default"
+      aria-label="Left Align"
+      onClick={onClickMarkComplete}
+    >
+      <span className="glyphicon glyphicon-ban-circle" aria-hidden="true" />
+    </button>
+  </div>
+);
+
+NormalViewRepairButtons.propTypes = {
+  repairId: PropTypes.number.isRequired,
+  onClickMarkComplete: PropTypes.func.isRequired,
+};

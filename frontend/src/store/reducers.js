@@ -29,6 +29,7 @@ export const repairs = (state = [], action) => {
   switch (action.type) {
     case C.FETCHED_REPAIRS:
       return action.repairs;
+
     case C.ADD_REPAIR:
       return [
         ...state,

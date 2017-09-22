@@ -29,7 +29,7 @@ the repairs for all users.
     curl -u admin:topsecret http://localhost:8000/api/users/1/repairs/
 
 This will get all the repairs for the user with id 1, provided that the user is
-either an admin or the user with id 1; otherwise it will return an empty list.
+either an admin or the user with id X; otherwise it will return an empty list.
 
 #### Get a specific repair: GET /api/repairs/X/
 

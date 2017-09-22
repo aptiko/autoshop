@@ -15,7 +15,7 @@ describe('addRepair action creator', () => {
   let resolveHoldingPromise = false;
   const mockResponse = {
     id: 24,
-    assigned_user: 57,
+    assigned_user: 3,
     date: '2017-08-11',
     time: '16:40:00',
     complete: false,
@@ -23,9 +23,9 @@ describe('addRepair action creator', () => {
 
   beforeAll(() => {
     fetchMock.post('end:/repairs/', mockResponse);
-    store = storeFactory({ repairs: testRepairs });
+    store = storeFactory({ repairs: testRepairs, users: testUsers });
     store.dispatch(addRepair(
-      57, new Date('2017-08-11'), '16:40', false));
+      3, new Date('2017-08-11'), '16:40', false));
   });
 
   afterAll(() => {
@@ -52,7 +52,7 @@ describe('addRepair action creator', () => {
     fetchMock.flush().then(() => {
       expect(JSON.parse(fetchMock.lastCall('end:/repairs/')[1].body))
         .toEqual({
-          assigned_user: 57,
+          assigned_user: 3,
           date: '2017-08-11',
           time: '16:40',
           complete: false,
@@ -73,7 +73,7 @@ describe('addRepair action creator', () => {
         expect(store.getState().repairs[6]).toEqual(testRepairs[6]);
         expect(store.getState().repairs[7]).toEqual({
           id: 24,
-          assignedUser: 57,
+          assignedUser: testUsers[2],
           date: new Date('2017-08-11'),
           time: '16:40',
           complete: false,
@@ -88,7 +88,7 @@ describe('editRepair action creator', () => {
   let resolveHoldingPromise = false;
   const mockResponse = {
     id: 22,
-    assigned_user: 57,
+    assigned_user: 3,
     date: '2017-08-11',
     time: '16:40:00',
     complete: false,
@@ -96,9 +96,9 @@ describe('editRepair action creator', () => {
 
   beforeAll(() => {
     fetchMock.put('end:/repairs/22/', mockResponse);
-    store = storeFactory({ repairs: testRepairs });
+    store = storeFactory({ repairs: testRepairs, users: testUsers });
     store.dispatch(editRepair(
-      57, 22, new Date('2017-08-11'), '16:40', false));
+      3, 22, new Date('2017-08-11'), '16:40', false));
   });
 
   afterAll(() => {
@@ -127,7 +127,7 @@ describe('editRepair action creator', () => {
         JSON.parse(fetchMock.lastCall('end:/repairs/22/')[1].body))
         .toEqual({
           id: 22,
-          assigned_user: 57,
+          assigned_user: 3,
           date: '2017-08-11',
           time: '16:40',
           complete: false,
@@ -147,7 +147,7 @@ describe('editRepair action creator', () => {
         expect(store.getState().repairs[5]).toEqual(testRepairs[6]);
         expect(store.getState().repairs[6]).toEqual({
           id: 22,
-          assignedUser: 57,
+          assignedUser: testUsers[2],
           date: new Date('2017-08-11'),
           time: '16:40',
           complete: false,
