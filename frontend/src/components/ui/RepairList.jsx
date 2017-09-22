@@ -14,10 +14,12 @@ class RepairList extends React.Component {
       user: 0,
       complete: null,
       date: null,
+      time: '',
     };
     this.onChangeUserFilter = this.onChangeUserFilter.bind(this);
     this.onChangeCompleteFilter = this.onChangeCompleteFilter.bind(this);
     this.onChangeDateFilter = this.onChangeDateFilter.bind(this);
+    this.onChangeTimeFilter = this.onChangeTimeFilter.bind(this);
   }
 
   onChangeUserFilter(e) {
@@ -32,6 +34,11 @@ class RepairList extends React.Component {
 
   onChangeDateFilter(e) {
     this.filters.date = e.target.value ? new Date(e.target.value) : null;
+    this.applyFilters();
+  }
+
+  onChangeTimeFilter(e) {
+    this.filters.time = e.target.value;
     this.applyFilters();
   }
 
@@ -61,6 +68,10 @@ class RepairList extends React.Component {
     });
     filteredRepairs = filteredRepairs.filter(r =>
       (this.filters.date ? r.date.getTime() === this.filters.date.getTime()
+        : true),
+    );
+    filteredRepairs = filteredRepairs.filter(r =>
+      (this.filters.time ? r.time.slice(0, 2) === this.filters.time.slice(0, 2)
         : true),
     );
     this.setState({ repairs: filteredRepairs });
@@ -109,7 +120,14 @@ class RepairList extends React.Component {
                   />
                 </form>
               </td>
-              <td />
+              <td>
+                <form className="time-filter-form">
+                  <input
+                    type="text"
+                    onChange={this.onChangeTimeFilter}
+                  />
+                </form>
+              </td>
               {superUserView ?
                 <td>
                   <form className="username-filter-form">
