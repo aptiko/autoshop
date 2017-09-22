@@ -56,7 +56,8 @@ export const addRepair = (assignedUserId, date, time, complete) =>
       .then(() => history.push('/repairs'))
       .catch(err => dispatch(setErrorMessage(err.message)));
 
-export const editRepair = (assignedUserId, id, date, time, complete) =>
+export const editRepair = (assignedUserId, id, date, time, complete,
+  redirectTo = false) =>
   (dispatch, getState) =>
     fetch(
       `/api/repairs/${id}/`,
@@ -92,7 +93,7 @@ export const editRepair = (assignedUserId, id, date, time, complete) =>
           complete: obj.complete,
         }))
       .then(dispatch)
-      .then(() => history.push('/repairs'))
+      .then(() => (redirectTo ? history.push(redirectTo) : null))
       .catch(err => dispatch(setErrorMessage(err.message)));
 
 export const removeRepair = id => (dispatch, getState) =>
@@ -352,7 +353,7 @@ export const markComplete = repairId => (dispatch, getState) => {
   dispatch(editRepair(
     repair.assignedUser.id,
     repair.id,
-    repair.date.toIsoString().slice(0, 10),
+    repair.date,
     repair.time,
     true,
   ));

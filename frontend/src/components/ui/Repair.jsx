@@ -24,12 +24,12 @@ const Repair = ({ repair, onRepairDelete, onMarkComplete, superUserView }) => (
     <td>
       {superUserView ?
         <SuperUserViewRepairButtons
-          repairId={repair.id}
+          repair={repair}
           onClickDelete={onRepairDelete}
         />
         :
         <NormalViewRepairButtons
-          repairId={repair.id}
+          repair={repair}
           onClickMarkComplete={onMarkComplete}
         />
       }

@@ -125,7 +125,7 @@ export const RepairFormContainer = connect(
       const userId = parseInt(e.target.assignedUser.value, 10);
       const complete = e.target.complete.checked;
       dispatch(repairId ?
-        editRepair(userId, repairId, date, time, complete)
+        editRepair(userId, repairId, date, time, complete, '/repairs')
         :
         addRepair(userId, date, time, complete));
     },
