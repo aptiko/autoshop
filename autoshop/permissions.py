@@ -44,4 +44,6 @@ class UserPermission(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        return request.user.is_staff or obj.id == request.data.get('pk', None)
+        return request.user.is_staff or (
+            request.method in permissions.SAFE_METHODS
+            and obj.id == request.user.id)

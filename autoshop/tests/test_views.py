@@ -410,6 +410,8 @@ class UserTestCase(APITestCase):
         self.assertEqual(response.status_code, 403)
 
         # Read user
+        response = self.client.get('/api/users/{}/'.format(self.alice.id))
+        self.assertEqual(response.status_code, 200)
         response = self.client.get('/api/users/{}/'.format(self.charlie.id))
         self.assertEqual(response.status_code, 403)
 
