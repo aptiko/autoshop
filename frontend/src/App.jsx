@@ -9,6 +9,7 @@ import MyRepairsPage from './pages/MyRepairsPage';
 import RepairsPage from './pages/RepairsPage';
 import UsersPage from './pages/UsersPage';
 import LoginPage from './pages/LoginPage';
+import RegistrationPage from './pages/RegistrationPage';
 import EditUserPage from './pages/EditUserPage';
 import EditRepairPage from './pages/EditRepairPage';
 import { fetchUsers, fetchRepairs } from './actions';
@@ -39,6 +40,7 @@ class App extends React.Component {
             path="/repairs/:repairId/edit"
             component={() => <EditRepairPage />}
           />
+          <Route path="/register" component={() => <RegistrationPage />} />
           <Route path="/login" component={() => <LoginPage />} />
         </div>
       </Router>

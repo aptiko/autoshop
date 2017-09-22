@@ -23,5 +23,7 @@ class MainView(View):
 
 urlpatterns = [
     url(r'^api/', include(autoshop.urls)),
+    url(r'^login', MainView.as_view(), name='account_login'),
+    url(r'^register', MainView.as_view(), name='account_signup'),
     url(r'^', MainView.as_view(), name='main-view'),
 ]

@@ -37,7 +37,8 @@ const MainNav = ({ loggedOnUser, handleLogout }) => (
           <li>
             <NavLink to="/login" activeClassName="active">Login</NavLink>
           </li>
-          <li><a id="btn-register" href="/accounts/register/">Register</a>
+          <li>
+            <NavLink to="/register" activeClassName="active">Register</NavLink>
           </li>
         </ul>
       </div>

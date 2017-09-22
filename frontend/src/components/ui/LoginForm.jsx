@@ -10,7 +10,12 @@ const LoginForm = ({ username, password, error, handleSubmit,
       ''
     }
     <div className="form-group">
-      <label htmlFor="username">Username</label>
+      <label
+        htmlFor="username"
+        className="col-xs-4 control-label"
+      >
+        Username
+      </label>
       <input
         type="text"
         name="username"
@@ -19,7 +24,12 @@ const LoginForm = ({ username, password, error, handleSubmit,
       />
     </div>
     <div className="form-group">
-      <label htmlFor="password">Password</label>
+      <label
+        htmlFor="password"
+        className="col-xs-4 control-label"
+      >
+       Password
+      </label>
       <input
         type="password"
         name="password"

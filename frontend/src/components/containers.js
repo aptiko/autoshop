@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 
 import C from '../constants';
+import RegistrationForm from './ui/RegistrationForm';
 import LoginForm from './ui/LoginForm';
 import MainNav from './ui/MainNav';
 import UserList from './ui/UserList';
@@ -9,7 +10,7 @@ import RepairForm from './ui/RepairForm';
 import RepairList from './ui/RepairList';
 import Message from './ui/Message';
 import {
-  login, logout, fetchUsers, editUser, addUser, removeUser,
+  register, login, logout, fetchUsers, editUser, addUser, removeUser,
   fetchRepairs, editRepair, addRepair, removeRepair, markComplete,
 } from '../actions';
 import { findById } from '../lib/array-helpers';
@@ -23,6 +24,21 @@ export const MainNavContainer = connect(
     },
   }),
 )(MainNav);
+
+export const RegistrationFormContainer = connect(
+  f => f,
+  dispatch => ({
+    handleSubmit(x) {
+      x.preventDefault();
+      dispatch(register(
+        x.target.username.value,
+        x.target.email.value,
+        x.target.password1.value,
+        x.target.password2.value,
+      ));
+    },
+  }),
+)(RegistrationForm);
 
 export const LoginFormContainer = connect(
   state => ({ ...state.loginForm }),

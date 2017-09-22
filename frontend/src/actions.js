@@ -268,6 +268,35 @@ export const fetchRepairs = () => (dispatch, getState) => {
     });
 };
 
+export const register = (username, email, password1, password2) => dispatch =>
+  fetch('/api/')
+    .then(() => getCookie('csrftoken'))
+    .then(csrftoken => fetch(
+      '/api/rest-auth/registration/',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password1,
+          password2,
+        }),
+      },
+    ))
+    .then(
+      response => (response.ok ? response.json() :
+        response.text().then((t) => {
+          throw new Error(
+            `Error registering; the server responded: ${t}`);
+        })),
+    )
+    .then(() => dispatch(setErrorMessage('Check your email')))
+    .catch(err => dispatch(setErrorMessage(err.message)));
+
 export const login = (username, password) => (dispatch, getState) => {
   const action = {
     type: C.LOGIN,
