@@ -205,63 +205,6 @@ export const removeUser = id => (dispatch, getState) =>
     .then(dispatch)
     .catch(err => dispatch(setErrorMessage(err.message)));
 
-export const login = (username, password) => (dispatch) => {
-  const action = {
-    type: C.LOGIN,
-    id: 0,
-    username,
-    role: '',
-    authToken: '',
-  };
-
-  return fetch('/api/')
-    .then(() => getCookie('csrftoken'))
-    .then(csrftoken => fetch(
-      '/api/rest-auth/login/',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrftoken,
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-      },
-    ))
-    .then(
-      (response) => {
-        if (!response.ok) {
-          throw new Error();
-        }
-        return response.json();
-      })
-    .then((obj) => {
-      action.authToken = obj.key;
-      return fetch(`/api/rest-auth/user/?username=${username}`,
-        {
-          headers: {
-            Authorization: `Token ${obj.key}`,
-          },
-        });
-    })
-    .then(response => response.json())
-    .then(obj => ({
-      ...action,
-      id: obj.pk,
-    }))
-    .then(dispatch)
-    .then(() => history.push('/'))
-    .catch(() => dispatch({
-      type: C.LOGIN,
-      id: 0,
-      username: '',
-      role: '',
-      authToken: '',
-    }));
-};
-
 export const logout = () => ({ type: C.LOGOUT });
 
 export const changeLoginForm = (name, value) =>
@@ -324,3 +267,63 @@ export const fetchRepairs = () => (dispatch, getState) => {
       dispatch(setErrorMessage(err.message));
     });
 };
+
+export const login = (username, password) => (dispatch) => {
+  const action = {
+    type: C.LOGIN,
+    id: 0,
+    username,
+    role: '',
+    authToken: '',
+  };
+
+  return fetch('/api/')
+    .then(() => getCookie('csrftoken'))
+    .then(csrftoken => fetch(
+      '/api/rest-auth/login/',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      },
+    ))
+    .then(
+      (response) => {
+        if (!response.ok) {
+          throw new Error();
+        }
+        return response.json();
+      })
+    .then((obj) => {
+      action.authToken = obj.key;
+      return fetch(`/api/rest-auth/user/?username=${username}`,
+        {
+          headers: {
+            Authorization: `Token ${obj.key}`,
+          },
+        });
+    })
+    .then(response => response.json())
+    .then(obj => ({
+      ...action,
+      id: obj.pk,
+    }))
+    .then(dispatch)
+    .then(() => history.push('/'))
+    .then(() => dispatch(fetchUsers()))
+    .then(() => dispatch(fetchRepairs()))
+    .catch(() => dispatch({
+      type: C.LOGIN,
+      id: 0,
+      username: '',
+      role: '',
+      authToken: '',
+    }));
+};
+
