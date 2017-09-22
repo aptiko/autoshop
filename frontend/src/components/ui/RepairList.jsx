@@ -13,9 +13,11 @@ class RepairList extends React.Component {
     this.filters = {
       user: 0,
       complete: null,
+      date: null,
     };
     this.onChangeUserFilter = this.onChangeUserFilter.bind(this);
     this.onChangeCompleteFilter = this.onChangeCompleteFilter.bind(this);
+    this.onChangeDateFilter = this.onChangeDateFilter.bind(this);
   }
 
   onChangeUserFilter(e) {
@@ -25,6 +27,11 @@ class RepairList extends React.Component {
 
   onChangeCompleteFilter(e) {
     this.filters.complete = JSON.parse(e.target.value);
+    this.applyFilters();
+  }
+
+  onChangeDateFilter(e) {
+    this.filters.date = e.target.value ? new Date(e.target.value) : null;
     this.applyFilters();
   }
 
@@ -52,6 +59,10 @@ class RepairList extends React.Component {
           throw new Error('Internal error');
       }
     });
+    filteredRepairs = filteredRepairs.filter(r =>
+      (this.filters.date ? r.date.getTime() === this.filters.date.getTime()
+        : true),
+    );
     this.setState({ repairs: filteredRepairs });
   }
 
@@ -90,7 +101,14 @@ class RepairList extends React.Component {
           <tbody>
             <tr>
               <th>Filter:</th>
-              <td />
+              <td>
+                <form className="date-filter-form">
+                  <input
+                    type="text"
+                    onChange={this.onChangeDateFilter}
+                  />
+                </form>
+              </td>
               <td />
               {superUserView ?
                 <td>
@@ -118,9 +136,9 @@ class RepairList extends React.Component {
                     defaultValue={null}
                     onChange={this.onChangeCompleteFilter}
                   >
-                    <option key={0} value='null' />
-                    <option key={1} value='true'>Completed</option>
-                    <option key={2} value='false'>Not completed</option>
+                    <option key={0} value="null" />
+                    <option key={1} value="true">Completed</option>
+                    <option key={2} value="false">Not completed</option>
                   </select>
                 </form>
               </td>
