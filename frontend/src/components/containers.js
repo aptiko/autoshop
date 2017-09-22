@@ -102,12 +102,12 @@ export const RepairFormContainer = connect(
       time: '00:00',
       assignedUser: null,
       complete: false,
-      users: state.users,
     };
     if (props.repairId) {
       result = findById(state.repairs, props.repairId);
       result.date = new Date(result.date);
     }
+    result.users = state.users;
     return result;
   },
   dispatch => ({

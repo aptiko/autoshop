@@ -2,7 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 
 const RepairForm = ({
-  id, date, time, assignedUser, complete, handleSubmit,
+  id, date, time, assignedUser, complete, users, handleSubmit,
 }) => (
   <form className="repair-form form-horizontal" onSubmit={handleSubmit}>
     <input type="hidden" name="repairId" value={id} />
@@ -48,13 +48,17 @@ const RepairForm = ({
         Assigned user
       </label>
       <div className="col-xs-8">
-        <input
+        <select
           className="form-control"
-          type="text"
           name="assignedUser"
-          defaultValue={assignedUser ? assignedUser.id : ''}
+          defaultValue={assignedUser ? assignedUser.id : 0}
           ref={f => f}
-        />
+        >
+          <option key={0} value={null} />
+          {users.map(u =>
+            <option key={u.id} value={u.id}>{u.username}</option>,
+          )}
+        </select>
       </div>
     </div>
     <div className="form-group">
@@ -83,6 +87,7 @@ RepairForm.propTypes = {
   time: PropTypes.string.isRequired,
   assignedUser: PropTypes.object,
   complete: PropTypes.bool.isRequired,
+  users: PropTypes.array.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 
