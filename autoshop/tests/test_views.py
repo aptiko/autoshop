@@ -27,7 +27,7 @@ class RepairTestCase(APITestCase):
         Token.objects.create(user=self.david)
         self.repair1 = models.Repair.objects.create(
             assigned_user=self.alice, date=datetime.date(2017, 4, 27),
-            time=datetime.time(13, 45), complete=False)
+            time=datetime.time(13, 00), complete=False)
         self.repair2 = models.Repair.objects.create(
             assigned_user=self.alice, date=datetime.date(2017, 4, 27),
             time=datetime.time(19, 00), complete=False)
@@ -39,7 +39,7 @@ class RepairTestCase(APITestCase):
             '/api/users/{}/repairs/'.format(self.alice.id))
         expected = (
             '[{{"id":{},"assigned_user":{},"date":"2017-04-27",'
-            '"time":"13:45:00","complete":false}},'
+            '"time":"13:00:00","complete":false}},'
             '{{"id":{},"assigned_user":{},"date":"2017-04-27",'
             '"time":"19:00:00","complete":false}}]'
         ).format(
@@ -64,7 +64,7 @@ class RepairTestCase(APITestCase):
             '/api/users/{}/repairs/'.format(self.alice.id))
         expected = (
             '[{{"id":{},"assigned_user":{},"date":"2017-04-27",'
-            '"time":"13:45:00","complete":false}},'
+            '"time":"13:00:00","complete":false}},'
             '{{"id":{},"assigned_user":{},"date":"2017-04-27",'
             '"time":"19:00:00","complete":false}}]'
         ).format(
@@ -79,7 +79,7 @@ class RepairTestCase(APITestCase):
                                 Token.objects.get(user__username='alice').key)
         response = self.client.get('/api/repairs/{}/'.format(self.repair1.id))
         expected = ('{{"id":{},"assigned_user":{},"date":"2017-04-27",'
-                    '"time":"13:45:00","complete":false}}'
+                    '"time":"13:00:00","complete":false}}'
                     ).format(self.repair1.id, self.alice.id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, bytes(expected, 'utf-8'))
@@ -90,7 +90,7 @@ class RepairTestCase(APITestCase):
         response = self.client.post(
             '/api/repairs/',
             {'assigned_user': self.alice.id, 'date': '2017-04-28',
-             'time': '08:15', 'complete': 'false'})
+             'time': '08:00', 'complete': 'false'})
         self.assertEqual(response.status_code, 403)
         self.assertEqual(models.Repair.objects.count(), 2)
 
@@ -100,14 +100,14 @@ class RepairTestCase(APITestCase):
         response = self.client.post(
             '/api/repairs/',
             {'assigned_user': self.alice.id, 'date': '2017-04-28',
-             'time': '08:15', 'complete': 'false'})
+             'time': '08:00', 'complete': 'false'})
         self.assertEqual(response.status_code, 201)
         self.assertEqual(models.Repair.objects.count(), 3)
         new_id = response.data['id']
         new_object = models.Repair.objects.get(pk=new_id)
         self.assertEqual(new_object.assigned_user.id, self.alice.id)
         self.assertEqual(new_object.date, datetime.date(2017, 4, 28))
-        self.assertEqual(new_object.time, datetime.time(8, 15))
+        self.assertEqual(new_object.time, datetime.time(8, 00))
         self.assertEqual(new_object.complete, False)
 
     def test_mark_repair_complete(self):
@@ -116,7 +116,7 @@ class RepairTestCase(APITestCase):
         response = self.client.put('/api/repairs/{}/'.format(self.repair1.id),
                                    data={'assigned_user': self.alice.id,
                                          'date': datetime.date(2017, 4, 27),
-                                         'time': datetime.time(13, 45),
+                                         'time': datetime.time(13, 00),
                                          'complete': True},
                                    format='json')
         self.assertEqual(response.status_code, 200)
@@ -124,7 +124,7 @@ class RepairTestCase(APITestCase):
         updated_object = models.Repair.objects.get(pk=self.repair1.id)
         self.assertEqual(updated_object.assigned_user.id, self.alice.id)
         self.assertEqual(updated_object.date, datetime.date(2017, 4, 27))
-        self.assertEqual(updated_object.time, datetime.time(13, 45))
+        self.assertEqual(updated_object.time, datetime.time(13, 00))
         self.assertEqual(updated_object.complete, True)
 
     def test_admin_user_can_update_repair(self):
@@ -133,14 +133,14 @@ class RepairTestCase(APITestCase):
         response = self.client.put('/api/repairs/{}/'.format(self.repair1.id),
                                    data={'assigned_user': self.alice.id,
                                          'date': datetime.date(2017, 4, 28),
-                                         'time': datetime.time(13, 45),
+                                         'time': datetime.time(13, 00),
                                          'complete': 'true'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(models.Repair.objects.count(), 2)
         updated_object = models.Repair.objects.get(pk=self.repair1.id)
         self.assertEqual(updated_object.assigned_user.id, self.alice.id)
         self.assertEqual(updated_object.date, datetime.date(2017, 4, 28))
-        self.assertEqual(updated_object.time, datetime.time(13, 45))
+        self.assertEqual(updated_object.time, datetime.time(13, 00))
         self.assertEqual(updated_object.complete, True)
 
     def test_normal_user_cannot_update_repair(self):
@@ -149,14 +149,14 @@ class RepairTestCase(APITestCase):
         response = self.client.put('/api/repairs/{}/'.format(self.repair1.id),
                                    data={'assigned_user': self.alice.id,
                                          'date': datetime.date(2017, 4, 28),
-                                         'time': datetime.time(13, 45),
+                                         'time': datetime.time(13, 00),
                                          'complete': 'true'})
         self.assertEqual(response.status_code, 403)
         self.assertEqual(models.Repair.objects.count(), 2)
         updated_object = models.Repair.objects.get(pk=self.repair1.id)
         self.assertEqual(updated_object.assigned_user.id, self.alice.id)
         self.assertEqual(updated_object.date, datetime.date(2017, 4, 27))
-        self.assertEqual(updated_object.time, datetime.time(13, 45))
+        self.assertEqual(updated_object.time, datetime.time(13, 00))
         self.assertEqual(updated_object.complete, False)
 
     def test_delete_repair(self):
@@ -186,7 +186,7 @@ class RepairTestCase(APITestCase):
         response = self.client.post(
             '/api/repairs/',
             {'assigned_user': self.alice.id, 'date': '2017-04-28',
-             'time': '08:15', 'complete': 'false'})
+             'time': '08:00', 'complete': 'false'})
         self.assertEqual(response.status_code, 401)
 
         # Read repair
@@ -197,7 +197,7 @@ class RepairTestCase(APITestCase):
         response = self.client.put('/api/repairs/{}/'.format(self.repair1.id),
                                    data={'user': self.alice.id,
                                          'date': datetime.date(2017, 4, 27),
-                                         'time': datetime.time(13, 45),
+                                         'time': datetime.time(13, 00),
                                          'complete': 'false'})
         self.assertEqual(response.status_code, 401)
 
@@ -221,7 +221,7 @@ class RepairTestCase(APITestCase):
         response = self.client.post(
             '/api/repairs/',
             {'assigned_user': self.alice.id, 'date': '2017-04-28',
-             'time': '08:15', 'complete': 'false'})
+             'time': '08:00', 'complete': 'false'})
         self.assertEqual(response.status_code, 403)
 
         # Read repair
@@ -232,7 +232,7 @@ class RepairTestCase(APITestCase):
         response = self.client.put('/api/repairs/{}/'.format(self.repair1.id),
                                    data={'user': self.alice.id,
                                          'date': datetime.date(2017, 4, 27),
-                                         'time': datetime.time(13, 45),
+                                         'time': datetime.time(13, 00),
                                          'complete': 'true'})
         self.assertEqual(response.status_code, 403)
 
@@ -256,14 +256,14 @@ class RepairTestCase(APITestCase):
         response = self.client.post(
             '/api/repairs/',
             {'assigned_user': self.alice.id, 'date': '2017-04-28',
-             'time': '08:15', 'complete': 'false'})
+             'time': '08:00', 'complete': 'false'})
         self.assertEqual(response.status_code, 201)
 
         # Read repair
         response = self.client.get('/api/repairs/{}/'.format(self.repair1.id))
         expected = (
             '{{"id":{},"assigned_user":{},"date":"2017-04-27",'
-            '"time":"13:45:00","complete":false}}'
+            '"time":"13:00:00","complete":false}}'
         ).format(self.repair1.id, self.alice.id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, bytes(expected, 'utf-8'))
@@ -272,14 +272,14 @@ class RepairTestCase(APITestCase):
         response = self.client.put('/api/repairs/{}/'.format(self.repair1.id),
                                    data={'user': self.alice.id,
                                          'date': datetime.date(2017, 4, 28),
-                                         'time': datetime.time(13, 46),
+                                         'time': datetime.time(23, 00),
                                          'complete': 'false'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(models.Repair.objects.count(), 3
                          )  # We created one above in addition to the two
         updated_object = models.Repair.objects.get(pk=self.repair1.id)
         self.assertEqual(updated_object.date, datetime.date(2017, 4, 28))
-        self.assertEqual(updated_object.time, datetime.time(13, 46))
+        self.assertEqual(updated_object.time, datetime.time(23, 00))
         self.assertEqual(updated_object.complete, False)
 
         # Delete repair
@@ -305,7 +305,7 @@ class UserTestCase(APITestCase):
         Token.objects.create(user=self.david)
         self.repair1 = models.Repair.objects.create(
             assigned_user=self.alice, date=datetime.date(2017, 4, 27),
-            time=datetime.time(13, 45), complete=False)
+            time=datetime.time(13, 00), complete=False)
         self.repair2 = models.Repair.objects.create(
             assigned_user=self.alice, date=datetime.date(2017, 4, 27),
             time=datetime.time(19, 00), complete=False)

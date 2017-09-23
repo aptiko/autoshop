@@ -1,13 +1,20 @@
 import datetime
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
+
+
+def validate_time_ends_in_zero(value):
+    if value.minute or value.second:
+        raise ValidationError('Repair time must have zero minutes and seconds')
 
 
 class Repair(models.Model):
     assigned_user = models.ForeignKey(User, blank=True, null=True)
     date = models.DateField(default=datetime.date.today, blank=True, null=True)
-    time = models.TimeField(blank=True, null=True)
+    time = models.TimeField(blank=True, null=True,
+                            validators=[validate_time_ends_in_zero])
     complete = models.BooleanField()
 
     class Meta:
@@ -17,6 +24,10 @@ class Repair(models.Model):
     def __str__(self):
         return 'Repair {} at {} {}'.format(self.id, self.date.isoformat(),
                                            self.time)
+
+    def save(self, *args, **kwargs):
+        validate_time_ends_in_zero(self.time)
+        super().save(*args, **kwargs)
 
 
 class RepairComment(models.Model):
