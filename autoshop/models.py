@@ -15,7 +15,11 @@ class Repair(models.Model):
     date = models.DateField(default=datetime.date.today, blank=True, null=True)
     time = models.TimeField(blank=True, null=True,
                             validators=[validate_time_ends_in_zero])
-    complete = models.BooleanField()
+    status = models.PositiveSmallIntegerField(choices=[
+        (0, 'Pending'),
+        (1, 'Complete'),
+        (2, 'Approved')
+    ])
 
     class Meta:
         ordering = ('date', 'time')

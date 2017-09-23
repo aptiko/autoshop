@@ -15,7 +15,7 @@ class RepairTestCase(TestCase):
         models.Repair.objects.create(assigned_user=self.user,
                                      date=datetime.date(2017, 4, 27),
                                      time=datetime.time(13, 00),
-                                     complete=False)
+                                     status=0)
 
     def test_str(self):
         repair = models.Repair.objects.all()[0]
@@ -28,22 +28,22 @@ class RepairTestCase(TestCase):
                           assigned_user=self.user,
                           date=datetime.date(2017, 4, 27),
                           time=datetime.time(13, 00),
-                          complete=True)
+                          status=1)
 
     def test_time_ends_in_zero(self):
         self.assertRaises(ValidationError, models.Repair.objects.create,
                           assigned_user=self.user,
                           date=datetime.date(2017, 4, 28),
                           time=datetime.time(13, 1),
-                          complete=True)
+                          status=1)
         self.assertRaises(ValidationError, models.Repair.objects.create,
                           assigned_user=self.user,
                           date=datetime.date(2017, 4, 28),
                           time=datetime.time(13, 0, 1),
-                          complete=True)
+                          status=1)
         # But the following should not raise
         models.Repair.objects.create(
             assigned_user=self.user,
             date=datetime.date(2017, 4, 28),
             time=datetime.time(13, 0, 0),
-            complete=True)
+            status=1)

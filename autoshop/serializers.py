@@ -9,7 +9,7 @@ class RepairSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Repair
-        fields = ('id', 'assigned_user', 'date', 'time', 'complete')
+        fields = ('id', 'assigned_user', 'date', 'time', 'status')
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -28,11 +28,11 @@ class RepairPermission(permissions.BasePermission):
         if request.method != 'PUT':
             return False
 
-        # Only marking repair as complete is allowed
+        # Only marking a pending repair as complete is allowed
         d = request.data
         dt = iso8601.parse_date(d['date'] + ' ' + d['time'],
                                 default_timezone=None)
-        return (d['complete'] and
+        return (obj.status == 0 and d['status'] == 1 and
                 d['assigned_user'] == obj.assigned_user.id and
                 dt == datetime.combine(obj.date, obj.time))
 
