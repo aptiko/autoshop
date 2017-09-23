@@ -3,6 +3,7 @@ import { PropTypes } from 'prop-types';
 
 import { NormalViewRepairButtons, SuperUserViewRepairButtons }
   from './RepairButtons';
+import { statusName } from '../../lib/misc-helpers';
 
 const Repair = ({ repair, onRepairDelete, onMarkComplete, superUserView }) => (
   <tr id={`repair-data-${repair.id}`} className="repair-data">
@@ -14,13 +15,7 @@ const Repair = ({ repair, onRepairDelete, onMarkComplete, superUserView }) => (
         repair.assignedUser ? repair.assignedUser.username : null
       }</td> : null
     }
-    <td className="repair-complete">
-      {repair.complete ?
-        <span className="glyphicon glyphicon-ok" aria-hidden="true" />
-        :
-        ''
-      }
-    </td>
+    <td className="repair-status">{statusName(repair.status)}</td>
     <td>
       {superUserView ?
         <SuperUserViewRepairButtons

@@ -17,6 +17,11 @@ const constants = {
   FETCHED_REPAIRS: 'FETCHED_REPAIRS',
   STOP_FETCHING_REPAIRS: 'STOP_FETCHING_REPAIRS',
 
+  // Repair statuses (use same as backend)
+  PENDING: 0,
+  COMPLETE: 1,
+  APPROVED: 2,
+
   // Roles
   SUPERUSER: 'SUPERUSER',
   NORMAL_USER: 'NORMAL_USER',

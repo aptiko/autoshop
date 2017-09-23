@@ -8,7 +8,7 @@ const repair = (state = {}, action) => {
         assignedUser: action.assignedUser,
         date: action.date,
         time: action.time,
-        complete: action.complete,
+        status: action.status,
       };
 
     case C.EDIT_REPAIR:
@@ -17,7 +17,7 @@ const repair = (state = {}, action) => {
         assignedUser: action.assignedUser,
         date: action.date,
         time: action.time,
-        complete: action.complete,
+        status: action.status,
       } : state;
 
     default:

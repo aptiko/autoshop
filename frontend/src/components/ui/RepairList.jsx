@@ -2,6 +2,8 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 
+import C from '../../constants';
+import { statusName } from '../../lib/misc-helpers';
 import Repair from './Repair';
 
 class RepairList extends React.Component {
@@ -12,12 +14,12 @@ class RepairList extends React.Component {
     };
     this.filters = {
       user: 0,
-      complete: null,
+      status: null,
       date: null,
       time: '',
     };
     this.onChangeUserFilter = this.onChangeUserFilter.bind(this);
-    this.onChangeCompleteFilter = this.onChangeCompleteFilter.bind(this);
+    this.onChangeStatusFilter = this.onChangeStatusFilter.bind(this);
     this.onChangeDateFilter = this.onChangeDateFilter.bind(this);
     this.onChangeTimeFilter = this.onChangeTimeFilter.bind(this);
   }
@@ -27,8 +29,8 @@ class RepairList extends React.Component {
     this.applyFilters();
   }
 
-  onChangeCompleteFilter(e) {
-    this.filters.complete = JSON.parse(e.target.value);
+  onChangeStatusFilter(e) {
+    this.filters.status = JSON.parse(e.target.value);
     this.applyFilters();
   }
 
@@ -54,18 +56,9 @@ class RepairList extends React.Component {
             r.assignedUser.id === this.filters.user;
       }
     });
-    filteredRepairs = filteredRepairs.filter((r) => {
-      switch (this.filters.complete) {
-        case null:
-          return true;
-        case true:
-          return r.complete;
-        case false:
-          return !r.complete;
-        default:
-          throw new Error('Internal error');
-      }
-    });
+    filteredRepairs = filteredRepairs.filter(r =>
+      this.filters.status === null || this.filters.status === r.status,
+    );
     filteredRepairs = filteredRepairs.filter(r =>
       (this.filters.date ? r.date.getTime() === this.filters.date.getTime()
         : true),
@@ -105,7 +98,7 @@ class RepairList extends React.Component {
               <th>Date</th>
               <th>Time</th>
               {superUserView ? <th>User</th> : null }
-              <th>Complete</th>
+              <th>Status</th>
               <th />
             </tr>
           </thead>
@@ -148,15 +141,16 @@ class RepairList extends React.Component {
                 null
               }
               <td>
-                <form className="complete-filter-form">
+                <form className="status-filter-form">
                   <select
-                    name="complete"
+                    name="status"
                     defaultValue={null}
-                    onChange={this.onChangeCompleteFilter}
+                    onChange={this.onChangeStatusFilter}
                   >
-                    <option key={0} value="null" />
-                    <option key={1} value="true">Completed</option>
-                    <option key={2} value="false">Not completed</option>
+                    <option key={-1} value="null" />
+                    {[C.PENDING, C.COMPLETE, C.APPROVED].map(s =>
+                      <option key={s} value={s}>{statusName(s)}</option>)
+                    }
                   </select>
                 </form>
               </td>

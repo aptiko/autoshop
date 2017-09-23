@@ -13,7 +13,7 @@ describe('repairs reducer', () => {
       assignedUser: 1,
       date: new Date('2017-06-11'),
       time: '16:40',
-      complete: false,
+      status: C.PENDING,
     };
     deepFreeze(action);
     const result = repairs(testRepairs, action);
@@ -27,7 +27,7 @@ describe('repairs reducer', () => {
       assignedUser: 1,
       date: new Date('2017-06-11'),
       time: '16:40',
-      complete: false,
+      status: C.PENDING,
     });
     expect(result[5]).toEqual(testRepairs[4]);
     expect(result[6]).toEqual(testRepairs[5]);
@@ -41,7 +41,7 @@ describe('repairs reducer', () => {
       assignedUser: 1,
       date: new Date('2017-06-11'),
       time: '16:40',
-      complete: false,
+      status: C.PENDING,
     };
     deepFreeze(action);
     const result = repairs(testRepairs, action);
@@ -55,7 +55,7 @@ describe('repairs reducer', () => {
       assignedUser: 1,
       date: new Date('2017-06-11'),
       time: '16:40',
-      complete: false,
+      status: C.PENDING,
     });
     expect(result[5]).toEqual(testRepairs[4]);
     expect(result[6]).toEqual(testRepairs[6]);
@@ -68,7 +68,7 @@ describe('repairs reducer', () => {
       assignedUser: 1,
       date: new Date('2017-08-11'),
       time: '16:40',
-      complete: false,
+      status: C.PENDING,
     };
     deepFreeze(action);
     const result = repairs(testRepairs, action);

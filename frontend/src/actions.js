@@ -16,7 +16,7 @@ export const setErrorMessage = msg => ({
   errorMessage: msg,
 });
 
-export const addRepair = (assignedUserId, date, time, complete) =>
+export const addRepair = (assignedUserId, date, time, status) =>
   (dispatch, getState) =>
     fetch(
       '/api/repairs/',
@@ -31,7 +31,7 @@ export const addRepair = (assignedUserId, date, time, complete) =>
           assigned_user: assignedUserId,
           date: date.toISOString().slice(0, 10),
           time,
-          complete,
+          status,
         }),
       },
     )
@@ -49,14 +49,14 @@ export const addRepair = (assignedUserId, date, time, complete) =>
           assignedUser: findById(getState().users, obj.assigned_user),
           date: new Date(obj.date),
           time: obj.time.slice(0, 5),
-          complete: obj.complete,
+          status: obj.status,
         }),
       )
       .then(dispatch)
       .then(() => history.push('/repairs'))
       .catch(err => dispatch(setErrorMessage(err.message)));
 
-export const editRepair = (assignedUserId, id, date, time, complete,
+export const editRepair = (assignedUserId, id, date, time, status,
   redirectTo = false) =>
   (dispatch, getState) =>
     fetch(
@@ -73,7 +73,7 @@ export const editRepair = (assignedUserId, id, date, time, complete,
           id,
           date: date.toISOString().slice(0, 10),
           time,
-          complete,
+          status,
         }),
       })
       .then(
@@ -90,7 +90,7 @@ export const editRepair = (assignedUserId, id, date, time, complete,
           assignedUser: findById(getState().users, obj.assigned_user),
           date: new Date(obj.date),
           time: obj.time.slice(0, 5),
-          complete: obj.complete,
+          status: obj.status,
         }))
       .then(dispatch)
       .then(() => (redirectTo ? history.push(redirectTo) : null))
@@ -258,7 +258,7 @@ export const fetchRepairs = () => (dispatch, getState) => {
           x.assigned_user === getState().loggedOnUser.id ?
             getState().loggedOnUser :
             findById(getState().users, x.assigned_user),
-        complete: x.complete,
+        status: x.status,
       })),
     }))
     .then(dispatch)
@@ -388,6 +388,6 @@ export const markComplete = repairId => (dispatch, getState) => {
     repair.id,
     repair.date,
     repair.time,
-    true,
+    C.COMPLETE,
   ));
 };

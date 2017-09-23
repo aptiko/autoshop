@@ -2,6 +2,8 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 
+import C from '../../constants';
+
 export const SuperUserViewRepairButtons = ({ repair, onClickDelete }) => (
   <div>
     <Link
@@ -36,7 +38,7 @@ export const NormalViewRepairButtons = ({ repair, onClickMarkComplete }) => (
       className="btn btn-default"
       aria-label="Left Align"
       onClick={onClickMarkComplete}
-      disabled={repair.complete}
+      disabled={repair.status !== C.PENDING}
     >
       <span className="glyphicon glyphicon-check" aria-hidden="true" />
     </button>

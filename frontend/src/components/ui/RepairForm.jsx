@@ -1,8 +1,11 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 
+import C from '../../constants';
+import { statusName } from '../../lib/misc-helpers';
+
 const RepairForm = ({
-  id, date, time, assignedUser, complete, users, handleSubmit,
+  id, date, time, assignedUser, status, users, handleSubmit,
 }) => (
   <form className="repair-form form-horizontal" onSubmit={handleSubmit}>
     <input type="hidden" name="repairId" value={id} />
@@ -62,15 +65,23 @@ const RepairForm = ({
       </div>
     </div>
     <div className="form-group">
-      <div className="col-xs-offset-4 col-xs-8">
-        <label htmlFor="complete">
-          <input
-            type="checkbox"
-            name="complete"
-            defaultChecked={complete}
-            ref={f => f}
-          /> Complete
-        </label>
+      <label
+        htmlFor="status"
+        className="col-xs-4 control-label"
+      >
+        Status
+      </label>
+      <div className="col-xs-8">
+        <select
+          className="form-control"
+          name="status"
+          defaultValue={status}
+          ref={f => f}
+        >
+          {[C.PENDING, C.COMPLETE, C.APPROVED].map(s =>
+            <option key={s} value={s}>{statusName(s)}</option>)
+          }
+        </select>
       </div>
     </div>
     <div className="form-group">
@@ -86,7 +97,7 @@ RepairForm.propTypes = {
   date: PropTypes.instanceOf(Date).isRequired,
   time: PropTypes.string.isRequired,
   assignedUser: PropTypes.object,
-  complete: PropTypes.bool.isRequired,
+  status: PropTypes.number.isRequired,
   users: PropTypes.array.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };

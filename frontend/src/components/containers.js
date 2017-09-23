@@ -124,7 +124,7 @@ export const RepairFormContainer = connect(
       date: new Date('1971-01-01'),
       time: '00:00',
       assignedUser: null,
-      complete: false,
+      status: C.PENDING,
     };
     if (props.repairId) {
       result = findById(state.repairs, props.repairId);
@@ -140,11 +140,11 @@ export const RepairFormContainer = connect(
       const date = new Date(e.target.date.value);
       const time = e.target.time.value;
       const userId = parseInt(e.target.assignedUser.value, 10);
-      const complete = e.target.complete.checked;
+      const status = e.target.status.value;
       dispatch(repairId ?
-        editRepair(userId, repairId, date, time, complete, '/repairs')
+        editRepair(userId, repairId, date, time, status, '/repairs')
         :
-        addRepair(userId, date, time, complete));
+        addRepair(userId, date, time, status));
     },
   }),
 )(RepairForm);

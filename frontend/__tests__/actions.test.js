@@ -3,7 +3,7 @@ import fetchMock from 'fetch-mock';
 
 import storeFactory from '../src/store';
 import { addRepair, editRepair, removeRepair, addUser, editUser,
-  removeUser, login, logout, changeLoginForm, fetchUsers }
+  removeUser, login, logout, fetchUsers }
   from '../src/actions';
 import C from '../src/constants';
 import { testUsers, testRepairs } from './global';
@@ -18,14 +18,14 @@ describe('addRepair action creator', () => {
     assigned_user: 3,
     date: '2017-08-11',
     time: '16:40:00',
-    complete: false,
+    status: C.PENDING,
   };
 
   beforeAll(() => {
     fetchMock.post('end:/repairs/', mockResponse);
     store = storeFactory({ repairs: testRepairs, users: testUsers });
     store.dispatch(addRepair(
-      3, new Date('2017-08-11'), '16:40', false));
+      3, new Date('2017-08-11'), '16:40', C.PENDING));
   });
 
   afterAll(() => {
@@ -55,7 +55,7 @@ describe('addRepair action creator', () => {
           assigned_user: 3,
           date: '2017-08-11',
           time: '16:40',
-          complete: false,
+          status: C.PENDING,
         });
     }),
   );
@@ -76,7 +76,7 @@ describe('addRepair action creator', () => {
           assignedUser: testUsers[2],
           date: new Date('2017-08-11'),
           time: '16:40',
-          complete: false,
+          status: C.PENDING,
         });
       }),
   );
@@ -91,14 +91,14 @@ describe('editRepair action creator', () => {
     assigned_user: 3,
     date: '2017-08-11',
     time: '16:40:00',
-    complete: false,
+    status: C.PENDING,
   };
 
   beforeAll(() => {
     fetchMock.put('end:/repairs/22/', mockResponse);
     store = storeFactory({ repairs: testRepairs, users: testUsers });
     store.dispatch(editRepair(
-      3, 22, new Date('2017-08-11'), '16:40', false));
+      3, 22, new Date('2017-08-11'), '16:40', C.PENDING));
   });
 
   afterAll(() => {
@@ -130,7 +130,7 @@ describe('editRepair action creator', () => {
           assigned_user: 3,
           date: '2017-08-11',
           time: '16:40',
-          complete: false,
+          status: C.PENDING,
         });
     }),
   );
@@ -150,7 +150,7 @@ describe('editRepair action creator', () => {
           assignedUser: testUsers[2],
           date: new Date('2017-08-11'),
           time: '16:40',
-          complete: false,
+          status: C.PENDING,
         });
       }),
   );
@@ -392,32 +392,6 @@ describe('logout action creator', () => {
       role: '',
       authToken: '',
     });
-  });
-});
-
-describe('changeLoginForm action creator', () => {
-  let store;
-
-  beforeEach(() => {
-    store = storeFactory({
-      loginForm: {
-        username: 'alice',
-        password: 'topsecret',
-        error: false,
-      },
-    });
-  });
-
-  it('changes username', () => {
-    store.dispatch(changeLoginForm('username', 'george'));
-    expect(store.getState().loginForm.username).toEqual('george');
-    expect(store.getState().loginForm.password).toEqual('topsecret');
-  });
-
-  it('changes password', () => {
-    store.dispatch(changeLoginForm('password', 'verysecret'));
-    expect(store.getState().loginForm.username).toEqual('alice');
-    expect(store.getState().loginForm.password).toEqual('verysecret');
   });
 });
 
