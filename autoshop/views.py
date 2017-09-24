@@ -45,7 +45,7 @@ class RepairDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class UserList(generics.ListCreateAPIView):
     serializer_class = UserSerializer
-    permission_classes = (IsAdminUser,)
+    permission_classes = (UserPermission,)
 
     def get_queryset(self):
         return User.objects.all()

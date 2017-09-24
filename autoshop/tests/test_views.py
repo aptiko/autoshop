@@ -393,7 +393,7 @@ class UserTestCase(APITestCase):
 
     def test_permissions_other_regular_user(self):
         """
-        Alice (regular user) shouldn't be able access users beside herself
+        Alice (regular user) should only be able to read users
         """
         self.client.credentials(HTTP_AUTHORIZATION='Token ' +
                                 Token.objects.get(user__username='alice').key)
@@ -402,7 +402,7 @@ class UserTestCase(APITestCase):
         response = self.client.get('/api/users/')
         expected = ('[{{"id":{},"username":"alice","is_staff":true}}]'
                     ).format(self.alice.id)
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
 
         # Create user
         response = self.client.post(
@@ -414,7 +414,7 @@ class UserTestCase(APITestCase):
         response = self.client.get('/api/users/{}/'.format(self.alice.id))
         self.assertEqual(response.status_code, 200)
         response = self.client.get('/api/users/{}/'.format(self.charlie.id))
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
 
         # Update user
         response = self.client.put('/api/users/{}/'.format(self.alice.id),

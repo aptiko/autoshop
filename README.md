@@ -43,6 +43,11 @@ Gets the repair with id 2.
 
 Gets the comments for repair 2.
 
+#### Create a comment: POST /api/repairs/X/comments/
+
+    curl -u alice:topsecret http://localhost:8000/api/repairs/2/comments/ \
+        -d comment="This repair sucks!"
+
 #### Create a repair: POST /api/repairs/
 
     curl -u alice:topsecret http://localhost:8000/api/repairs/ \
@@ -78,8 +83,7 @@ This only works if Alice is an admin.
 
     curl -u alice:topsecret http://localhost:8000/api/users/
 
-This will get only alice, unless alice is an admin, in which case it will get
-all users.
+This will get all users.
 
 #### Get a specific user: GET /api/users/X/
 

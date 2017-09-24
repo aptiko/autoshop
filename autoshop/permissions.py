@@ -56,11 +56,22 @@ class RepairCommentPermission(permissions.BasePermission):
 
 class UserPermission(permissions.BasePermission):
     """
-    Custom permission to only allow viewing of a user by the admin or the user
+    Custom permission to only allow updating of a user by the admin or the user
     himself.
     """
 
-    def has_object_permission(self, request, view, obj):
-        return request.user.is_staff or (
-            request.method in permissions.SAFE_METHODS
-            and obj.id == request.user.id)
+    def has_permission(self, request, view):
+        # Unauthenticated users not ok
+        if not request.user.is_authenticated():
+            return False
+
+        # Otherwise, admins ok
+        if request.user.is_staff:
+            return True
+
+        # Otherwise, unsafe methods not ok
+        if not request.method in permissions.SAFE_METHODS:
+            return False
+
+        # Otherwise, OK
+        return True
