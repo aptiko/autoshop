@@ -37,6 +37,12 @@ either an admin or the user with id X; otherwise it will return an empty list.
 
 Gets the repair with id 2.
 
+#### Get the comments for a repair: GET /api/repairs/X/comments/
+
+    curl -u alice:topsecret http://localhost:8000/api/repairs/2/comments/
+
+Gets the comments for repair 2.
+
 #### Create a repair: POST /api/repairs/
 
     curl -u alice:topsecret http://localhost:8000/api/repairs/ \

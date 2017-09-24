@@ -3,6 +3,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 
 def validate_time_ends_in_zero(value):
@@ -37,7 +38,7 @@ class Repair(models.Model):
 class RepairComment(models.Model):
     repair = models.ForeignKey(Repair)
     user = models.ForeignKey(User)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
     comment = models.TextField()
 
     class Meta:

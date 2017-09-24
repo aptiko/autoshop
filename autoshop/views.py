@@ -9,8 +9,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import models
-from .permissions import RepairPermission, UserPermission
-from .serializers import RepairSerializer, UserSerializer
+from .permissions import (RepairCommentPermission, RepairPermission,
+                          UserPermission)
+from .serializers import (RepairCommentSerializer, RepairSerializer,
+                          UserSerializer)
 
 
 class AdminRepairList(generics.ListCreateAPIView):
@@ -55,6 +57,15 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return User.objects.all()
+
+
+class RepairCommentList(generics.ListCreateAPIView):
+    serializer_class = RepairCommentSerializer
+    permission_classes = (RepairCommentPermission,)
+
+    def get_queryset(self):
+        return models.RepairComment.objects.filter(
+            repair__id=self.kwargs['pk'])
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')

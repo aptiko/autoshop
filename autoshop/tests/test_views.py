@@ -477,3 +477,80 @@ class UserTestCase(APITestCase):
         self.assertEqual(response.status_code, 204)
         response = self.client.delete('/api/users/{}/'.format(self.david.id))
         self.assertEqual(response.status_code, 204)
+
+
+class RepairCommentTestCase(APITestCase):
+
+    def setUp(self):
+        self.alice = User.objects.create(
+            username='alice', password=make_password('topsecret'))
+        Token.objects.create(user=self.alice)
+        self.bob = User.objects.create(
+            username='bob', password=make_password('topsecret'))
+        Token.objects.create(user=self.bob)
+        self.charlie = User.objects.create(
+            username='charlie', password=make_password('topsecret'))
+        Token.objects.create(user=self.charlie)
+        self.david = User.objects.create(
+            username='david', password=make_password('topsecret'),
+            is_staff=True)
+        Token.objects.create(user=self.david)
+        self.repair1 = models.Repair.objects.create(
+            assigned_user=self.alice, date=datetime.date(2017, 4, 27),
+            time=datetime.time(13, 00), status=0)
+        self.repair2 = models.Repair.objects.create(
+            assigned_user=self.alice, date=datetime.date(2017, 4, 27),
+            time=datetime.time(19, 00), status=0)
+        self.comment1 = models.RepairComment.objects.create(
+            repair=self.repair1,
+            user=self.alice,
+            date=datetime.datetime(2017, 9, 24, 9, 49),
+            comment='This car is a custom model with a jet engine.'
+        )
+        self.comment2 = models.RepairComment.objects.create(
+            repair=self.repair1,
+            user=self.charlie,
+            date=datetime.datetime(2017, 9, 24, 9, 50),
+            comment='It must be sent to Boeing or Airbus.')
+
+    def test_comment_list(self):
+        # Bob should not be able to see the comments on Alice's repairs
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' +
+                                Token.objects.get(user__username='bob').key)
+        response = self.client.get(
+            '/api/repairs/{}/comments/'.format(self.repair1.id))
+        self.assertEqual(response.status_code, 403)
+
+        # But David, an admin, should
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' +
+                                Token.objects.get(user__username='david').key)
+        response = self.client.get(
+            '/api/repairs/{}/comments/'.format(self.repair1.id))
+        expected = (
+            '[{{"id":{},"repair":{},"user":{},"date":"2017-09-24T09:49:00",'
+            '"comment":"This car is a custom model with a jet engine."}},'
+            '{{"id":{},"repair":{},"user":{},"date":"2017-09-24T09:50:00",'
+            '"comment":"It must be sent to Boeing or Airbus."}}]'
+        ).format(
+            self.comment1.id, self.repair1.id, self.alice.id,
+            self.comment2.id, self.repair1.id, self.charlie.id
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, bytes(expected, 'utf-8'))
+
+        # And Alice should
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' +
+                                Token.objects.get(user__username='alice').key)
+        response = self.client.get(
+            '/api/repairs/{}/comments/'.format(self.repair1.id))
+        expected = (
+            '[{{"id":{},"repair":{},"user":{},"date":"2017-09-24T09:49:00",'
+            '"comment":"This car is a custom model with a jet engine."}},'
+            '{{"id":{},"repair":{},"user":{},"date":"2017-09-24T09:50:00",'
+            '"comment":"It must be sent to Boeing or Airbus."}}]'
+        ).format(
+            self.comment1.id, self.repair1.id, self.alice.id,
+            self.comment2.id, self.repair1.id, self.charlie.id
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, bytes(expected, 'utf-8'))

@@ -3,6 +3,8 @@ from datetime import datetime
 import iso8601
 from rest_framework import permissions
 
+from . import models
+
 
 class RepairPermission(permissions.BasePermission):
     """
@@ -35,6 +37,21 @@ class RepairPermission(permissions.BasePermission):
         return (obj.status == 0 and d['status'] == 1 and
                 d['assigned_user'] == obj.assigned_user.id and
                 dt == datetime.combine(obj.date, obj.time))
+
+
+class RepairCommentPermission(permissions.BasePermission):
+    """
+    Custom permission to only allow the user assigned to a repair and the
+    superuser to add a comment or view the comments.
+    """
+
+    def has_permission(self, request, view):
+        # We don't need to check the request method here; these are checked
+        # in the view (it's ListCreateAPIView, which only allows select and
+        # insert)
+        return (request.user.is_staff
+                or request.user ==
+                models.Repair.objects.get(pk=view.kwargs['pk']).assigned_user)
 
 
 class UserPermission(permissions.BasePermission):
