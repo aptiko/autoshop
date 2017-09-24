@@ -3,10 +3,10 @@ import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 
-import C from './constants';
 import history from './history';
 import MyRepairsPage from './pages/MyRepairsPage';
 import RepairsPage from './pages/RepairsPage';
+import RepairDetailPage from './pages/RepairDetailPage';
 import UsersPage from './pages/UsersPage';
 import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
@@ -15,14 +15,10 @@ import EditRepairPage from './pages/EditRepairPage';
 import { fetchUsers, fetchRepairs } from './actions';
 
 class App extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
     /* Load users and repairs on page load */
     if (this.props.loggedOnUser.id) {
-      if (this.props.loggedOnUser.role === C.SUPERUSER) {
-        this.props.fetchUsers().then(this.props.fetchRepairs());
-      } else {
-        this.props.fetchRepairs();
-      }
+      this.props.fetchUsers().then(this.props.fetchRepairs());
     }
   }
 
@@ -32,6 +28,10 @@ class App extends React.Component {
         <div>
           <Route exact path="/" component={() => <MyRepairsPage />} />
           <Route exact path="/repairs" component={() => <RepairsPage />} />
+          <Route
+            path="/repairs/:repairId"
+            component={() => <RepairDetailPage />}
+          />
           <Route exact path="/users" component={() => <UsersPage />} />
           <Route
             path="/users/:userId/edit"

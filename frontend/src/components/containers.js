@@ -8,6 +8,7 @@ import UserList from './ui/UserList';
 import UserForm from './ui/UserForm';
 import RepairForm from './ui/RepairForm';
 import RepairList from './ui/RepairList';
+import RepairDetail from './ui/RepairDetail';
 import Message from './ui/Message';
 import {
   register, login, logout, fetchUsers, editUser, addUser, removeUser,
@@ -148,6 +149,14 @@ export const RepairFormContainer = connect(
     },
   }),
 )(RepairForm);
+
+export const RepairDetailContainer = connect(
+  (state, props) => ({
+    repair: findById(state.repairs, props.repairId),
+    loggedOnUser: state.loggedOnUser,
+    users: state.users,
+  }),
+)(RepairDetail);
 
 export const MessageContainer = connect(
   (state) => {

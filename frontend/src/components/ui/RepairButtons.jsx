@@ -4,19 +4,15 @@ import { Link } from 'react-router-dom';
 
 import C from '../../constants';
 
-export const SuperUserViewRepairButtons = ({
-  repair, onClickDelete, onClickComments,
-}) => (
+export const SuperUserViewRepairButtons = ({ repair, onClickDelete }) => (
   <div>
-    <button
-      id={`repair-comments-${repair.id}`}
-      type="button"
+    <Link
+      to={`/repairs/${repair.id}`}
       className="btn btn-default btn-comments"
       aria-label="Left Align"
-      onClick={onClickComments}
     >
       <span className="glyphicon glyphicon-comment" aria-hidden="true" />
-    </button>
+    </Link>
     <Link
       to={`/repairs/${repair.id}/edit`}
       className="btn btn-default btn-edit"
@@ -39,22 +35,17 @@ export const SuperUserViewRepairButtons = ({
 SuperUserViewRepairButtons.propTypes = {
   repair: PropTypes.object.isRequired,
   onClickDelete: PropTypes.func.isRequired,
-  onClickComments: PropTypes.func.isRequired,
 };
 
-export const NormalViewRepairButtons = ({
-  repair, onClickMarkComplete, onClickComments,
-}) => (
+export const NormalViewRepairButtons = ({ repair, onClickMarkComplete }) => (
   <div>
-    <button
-      id={`repair-comments-${repair.id}`}
-      type="button"
+    <Link
+      to={`/repairs/${repair.id}`}
       className="btn btn-default btn-comments"
       aria-label="Left Align"
-      onClick={onClickComments}
     >
       <span className="glyphicon glyphicon-comment" aria-hidden="true" />
-    </button>
+    </Link>
     <button
       id={`mark-complete-${repair.id}`}
       type="button"
@@ -71,5 +62,4 @@ export const NormalViewRepairButtons = ({
 NormalViewRepairButtons.propTypes = {
   repair: PropTypes.object.isRequired,
   onClickMarkComplete: PropTypes.func.isRequired,
-  onClickComments: PropTypes.func.isRequired,
 };

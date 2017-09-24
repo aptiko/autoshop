@@ -297,7 +297,7 @@ export const register = (username, email, password1, password2) => dispatch =>
     .then(() => dispatch(setErrorMessage('Check your email')))
     .catch(err => dispatch(setErrorMessage(err.message)));
 
-export const login = (username, password) => (dispatch, getState) => {
+export const login = (username, password) => (dispatch) => {
   const action = {
     type: C.LOGIN,
     id: 0,
@@ -369,9 +369,8 @@ export const login = (username, password) => (dispatch, getState) => {
     })
     .then(dispatch)
     .then(() => history.push('/'))
+    .then(() => dispatch(fetchUsers()))
     .then(() => dispatch(fetchRepairs()))
-    .then(() => (getState().loggedOnUser.role === C.SUPERUSER)
-      && dispatch(fetchUsers()))
     .catch(() => dispatch({
       type: C.LOGIN,
       id: 0,

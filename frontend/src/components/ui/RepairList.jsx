@@ -23,7 +23,6 @@ class RepairList extends React.Component {
     this.onChangeStatusFilter = this.onChangeStatusFilter.bind(this);
     this.onChangeDateFilter = this.onChangeDateFilter.bind(this);
     this.onChangeTimeFilter = this.onChangeTimeFilter.bind(this);
-    this.onClickComments = this.onClickComments.bind(this);
   }
 
   onChangeUserFilter(e) {
@@ -46,15 +45,8 @@ class RepairList extends React.Component {
     this.applyFilters();
   }
 
-  onClickComments(e, id) {
-    this.filters.only = this.filters.only === id ? 0 : id;
-    this.applyFilters();
-  }
-
   applyFilters() {
     let filteredRepairs = this.props.repairs;
-    filteredRepairs = filteredRepairs.filter(r =>
-      (!this.filters.only) || this.filters.only === r.id);
     filteredRepairs = filteredRepairs.filter((r) => {
       switch (this.filters.user) {
         case -1:
@@ -173,7 +165,6 @@ class RepairList extends React.Component {
                   repair={x}
                   onRepairDelete={e => onRepairDelete(e, x.id)}
                   onMarkComplete={e => onMarkComplete(e, x.id)}
-                  onClickComments={e => this.onClickComments(e, x.id)}
                   superUserView={superUserView}
                 />),
               )
