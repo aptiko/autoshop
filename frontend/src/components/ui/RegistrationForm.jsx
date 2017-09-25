@@ -47,7 +47,7 @@ const RegistrationForm = ({ handleSubmit }) => (
         htmlFor="password2"
         className="col-xs-4 control-label"
       >
-        Password
+        Repeat password
       </label>
       <input
         type="password"
@@ -55,7 +55,7 @@ const RegistrationForm = ({ handleSubmit }) => (
         ref={f => f}
       />
     </div>
-    <input type="submit" value="Login" />
+    <input type="submit" value="Register" />
   </form>
 );
 
