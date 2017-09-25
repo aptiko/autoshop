@@ -6,6 +6,38 @@ Users can create accounts and log in. They can see and edit a list of repairs
 assigned to them and filter them and mark them as complete. Administrators can
 add, remove and edit repairs and assign users to them.
 
+## Creating a development installation
+
+- Clone the repository and go to the top-level directory.
+- Create and activate a Python 3 virtualenv.
+- Install backend dependencies: `pip install -r requirements.txt`
+- Prepare the database: `./manage.py migrate`
+- Run the backend tests: `./manage.py test`
+- Create a superuser: `./manage.py createsuperuser`
+- Start the backend server: `./manage.py runserver`
+- On another terminal window, change to the `frontend` directory.
+- Install frontend dependencies: `yarn`.
+- Run the frontend tests: `yarn run jest`.
+- Compile the frontend: `yarn run webpack -- --watch`.
+
+After all this, you should be able to logon to http://localhost:8000/ and do
+more stuff.
+
+## Known limitations
+
+- When a user manager hits "reload" on the browser, it sometimes shows all
+  repairs as unassigned; this is because it manages to finish loading repairs
+  from the server before it has managed to load users.
+- Password setting and changing has not been implemented; the user is specified
+  at registration time and that's it.
+- The dates are entered in text fields in ISO8601 format instead of using
+  date pickers.
+- It would have been more logical when filtering with dates to be able to
+  specify a start date and an end date.
+- The times sometimes show as 00:00 and sometimes as 00:00:00.
+- When a user registers and confirms their email, the confirmation page has
+  no CSS and the links are incorrect (but the registration finishes OK).
+- Whenever there is an error when submitting a form, the form is cleared.
 
 ## Web service API
 
