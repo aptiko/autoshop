@@ -97,6 +97,8 @@ class RepairDetail extends React.Component {
     if (!this.props.repair) {
       return null;
     }
+    const assignedUserName = this.props.repair.assignedUser ?
+      this.props.repair.assignedUser.username : '';
     return (
       <div id="repair">
         <h1>Repair {this.props.repair.id}</h1>
@@ -106,7 +108,7 @@ class RepairDetail extends React.Component {
           &nbsp;
           {this.props.repair.time}
         </p>
-        <p><b>Assigned to:</b> {this.props.repair.assignedUser.username}</p>
+        <p><b>Assigned to:</b> {assignedUserName}</p>
         <p><b>Status:</b> {statusName(this.props.repair.status)}</p>
         <CommentList comments={this.state.comments} />
         <CommentForm handleSubmit={this.onClickAddComment} />

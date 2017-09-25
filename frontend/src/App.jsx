@@ -29,15 +29,18 @@ class App extends React.Component {
           <Route exact path="/" component={() => <MyRepairsPage />} />
           <Route exact path="/repairs" component={() => <RepairsPage />} />
           <Route
+            exact
             path="/repairs/:repairId"
             component={() => <RepairDetailPage />}
           />
           <Route exact path="/users" component={() => <UsersPage />} />
           <Route
+            exact
             path="/users/:userId/edit"
             component={() => <EditUserPage />}
           />
           <Route
+            exact
             path="/repairs/:repairId/edit"
             component={() => <EditRepairPage />}
           />
