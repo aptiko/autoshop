@@ -75,8 +75,11 @@ class RepairList extends React.Component {
   render() {
     const {
       loading, onClickReload, onRepairDelete, onMarkComplete,
-      superUserView, users,
+      superUserView, users, loggedOnUser,
     } = this.props;
+    if (!loggedOnUser.id) {
+      return null;
+    }
     return (
       <div id="repairs">
         <h1>
@@ -202,6 +205,7 @@ RepairList.propTypes = {
   onClickReload: PropTypes.func.isRequired,
   onRepairDelete: PropTypes.func.isRequired,
   onMarkComplete: PropTypes.func.isRequired,
+  loggedOnUser: PropTypes.object.isRequired,
 };
 
 export default RepairList;
