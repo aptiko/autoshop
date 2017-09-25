@@ -10,6 +10,7 @@ const Repair = ({
 }) => (
   <tr id={`repair-data-${repair.id}`} className="repair-data">
     <td className="repair-id">{repair.id}</td>
+    <td className="repair-description">{repair.description}</td>
     <td className="repair-date">{repair.date.toISOString().slice(0, 10)}</td>
     <td className="repair-time">{repair.time}</td>
     { superUserView ?

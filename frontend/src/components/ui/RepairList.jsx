@@ -97,6 +97,7 @@ class RepairList extends React.Component {
           <thead>
             <tr>
               <th />
+              <th>Description</th>
               <th>Date</th>
               <th>Time</th>
               {superUserView ? <th>User</th> : null }
@@ -107,6 +108,7 @@ class RepairList extends React.Component {
           <tbody>
             <tr>
               <th>Filter:</th>
+              <td />
               <td>
                 <form className="date-filter-form">
                   <input

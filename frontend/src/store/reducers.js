@@ -6,6 +6,7 @@ const repair = (state = {}, action) => {
       return {
         id: action.id,
         assignedUser: action.assignedUser,
+        description: action.description,
         date: action.date,
         time: action.time,
         status: action.status,
@@ -15,6 +16,7 @@ const repair = (state = {}, action) => {
       return state.id === action.id ? {
         id: action.id,
         assignedUser: action.assignedUser,
+        description: action.description,
         date: action.date,
         time: action.time,
         status: action.status,

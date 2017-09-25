@@ -122,6 +122,7 @@ export const RepairFormContainer = connect(
   (state, props) => {
     let result = {
       id: props.repairId,
+      description: '',
       date: new Date('1971-01-01'),
       time: '00:00',
       assignedUser: null,
@@ -138,14 +139,16 @@ export const RepairFormContainer = connect(
     handleSubmit(e) {
       e.preventDefault();
       const repairId = parseInt(e.target.repairId.value, 10);
+      const description = e.target.description.value;
       const date = new Date(e.target.date.value);
       const time = e.target.time.value;
       const userId = parseInt(e.target.assignedUser.value, 10);
       const status = e.target.status.value;
       dispatch(repairId ?
-        editRepair(userId, repairId, date, time, status, '/repairs')
+        editRepair(userId, repairId, description, date, time, status,
+          '/repairs')
         :
-        addRepair(userId, date, time, status));
+        addRepair(userId, description, date, time, status));
     },
   }),
 )(RepairForm);

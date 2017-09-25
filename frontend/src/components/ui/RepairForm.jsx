@@ -5,10 +5,27 @@ import C from '../../constants';
 import { statusName } from '../../lib/misc-helpers';
 
 const RepairForm = ({
-  id, date, time, assignedUser, status, users, handleSubmit,
+  id, description, date, time, assignedUser, status, users, handleSubmit,
 }) => (
   <form className="repair-form form-horizontal" onSubmit={handleSubmit}>
     <input type="hidden" name="repairId" value={id} />
+    <div className="form-group">
+      <label
+        className="col-xs-4 control-label"
+        htmlFor="description"
+      >
+        Description
+      </label>
+      <div className="col-xs-8">
+        <input
+          className="form-control"
+          type="text"
+          name="description"
+          defaultValue={description}
+          ref={f => f}
+        />
+      </div>
+    </div>
     <div className="form-group">
       <label
         className="col-xs-4 control-label"
@@ -94,6 +111,7 @@ const RepairForm = ({
 
 RepairForm.propTypes = {
   id: PropTypes.number.isRequired,
+  description: PropTypes.string.isRequired,
   date: PropTypes.instanceOf(Date).isRequired,
   time: PropTypes.string.isRequired,
   assignedUser: PropTypes.object,

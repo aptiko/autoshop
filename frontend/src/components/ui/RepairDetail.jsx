@@ -100,6 +100,7 @@ class RepairDetail extends React.Component {
     return (
       <div id="repair">
         <h1>Repair {this.props.repair.id}</h1>
+        <p><b>{this.props.repair.description}</b></p>
         <p>
           {this.props.repair.date.toISOString().slice(0, 10)}
           &nbsp;

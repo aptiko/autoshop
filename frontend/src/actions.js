@@ -16,7 +16,7 @@ export const setErrorMessage = msg => ({
   errorMessage: msg,
 });
 
-export const addRepair = (assignedUserId, date, time, status) =>
+export const addRepair = (assignedUserId, description, date, time, status) =>
   (dispatch, getState) =>
     fetch(
       '/api/repairs/',
@@ -29,6 +29,7 @@ export const addRepair = (assignedUserId, date, time, status) =>
         },
         body: JSON.stringify({
           assigned_user: assignedUserId,
+          description,
           date: date.toISOString().slice(0, 10),
           time,
           status,
@@ -47,6 +48,7 @@ export const addRepair = (assignedUserId, date, time, status) =>
           type: C.ADD_REPAIR,
           id: obj.id,
           assignedUser: findById(getState().users, obj.assigned_user),
+          description: obj.description,
           date: new Date(obj.date),
           time: obj.time.slice(0, 5),
           status: obj.status,
@@ -56,7 +58,7 @@ export const addRepair = (assignedUserId, date, time, status) =>
       .then(() => history.push('/repairs'))
       .catch(err => dispatch(setErrorMessage(err.message)));
 
-export const editRepair = (assignedUserId, id, date, time, status,
+export const editRepair = (assignedUserId, id, description, date, time, status,
   redirectTo = false) =>
   (dispatch, getState) =>
     fetch(
@@ -71,6 +73,7 @@ export const editRepair = (assignedUserId, id, date, time, status,
         body: JSON.stringify({
           assigned_user: assignedUserId,
           id,
+          description,
           date: date.toISOString().slice(0, 10),
           time,
           status,
@@ -88,6 +91,7 @@ export const editRepair = (assignedUserId, id, date, time, status,
           type: C.EDIT_REPAIR,
           id: obj.id,
           assignedUser: findById(getState().users, obj.assigned_user),
+          description: obj.description,
           date: new Date(obj.date),
           time: obj.time.slice(0, 5),
           status: obj.status,
@@ -252,6 +256,7 @@ export const fetchRepairs = () => (dispatch, getState) => {
       type: C.FETCHED_REPAIRS,
       repairs: obj.map(x => ({
         id: x.id,
+        description: x.description,
         date: new Date(x.date),
         time: x.time,
         assignedUser:
@@ -385,6 +390,7 @@ export const markComplete = repairId => (dispatch, getState) => {
   dispatch(editRepair(
     repair.assignedUser.id,
     repair.id,
+    repair.description,
     repair.date,
     repair.time,
     C.COMPLETE,

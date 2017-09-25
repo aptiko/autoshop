@@ -16,6 +16,7 @@ describe('addRepair action creator', () => {
   const mockResponse = {
     id: 24,
     assigned_user: 3,
+    description: 'Important repair',
     date: '2017-08-11',
     time: '16:40:00',
     status: C.PENDING,
@@ -25,7 +26,7 @@ describe('addRepair action creator', () => {
     fetchMock.post('end:/repairs/', mockResponse);
     store = storeFactory({ repairs: testRepairs, users: testUsers });
     store.dispatch(addRepair(
-      3, new Date('2017-08-11'), '16:40', C.PENDING));
+      3, 'Important repair', new Date('2017-08-11'), '16:40', C.PENDING));
   });
 
   afterAll(() => {
@@ -53,6 +54,7 @@ describe('addRepair action creator', () => {
       expect(JSON.parse(fetchMock.lastCall('end:/repairs/')[1].body))
         .toEqual({
           assigned_user: 3,
+          description: 'Important repair',
           date: '2017-08-11',
           time: '16:40',
           status: C.PENDING,
@@ -74,6 +76,7 @@ describe('addRepair action creator', () => {
         expect(store.getState().repairs[7]).toEqual({
           id: 24,
           assignedUser: testUsers[2],
+          description: 'Important repair',
           date: new Date('2017-08-11'),
           time: '16:40',
           status: C.PENDING,
@@ -89,6 +92,7 @@ describe('editRepair action creator', () => {
   const mockResponse = {
     id: 22,
     assigned_user: 3,
+    description: 'Important repair',
     date: '2017-08-11',
     time: '16:40:00',
     status: C.PENDING,
@@ -98,7 +102,7 @@ describe('editRepair action creator', () => {
     fetchMock.put('end:/repairs/22/', mockResponse);
     store = storeFactory({ repairs: testRepairs, users: testUsers });
     store.dispatch(editRepair(
-      3, 22, new Date('2017-08-11'), '16:40', C.PENDING));
+      3, 22, 'Important repair', new Date('2017-08-11'), '16:40', C.PENDING));
   });
 
   afterAll(() => {
@@ -128,6 +132,7 @@ describe('editRepair action creator', () => {
         .toEqual({
           id: 22,
           assigned_user: 3,
+          description: 'Important repair',
           date: '2017-08-11',
           time: '16:40',
           status: C.PENDING,
@@ -148,6 +153,7 @@ describe('editRepair action creator', () => {
         expect(store.getState().repairs[6]).toEqual({
           id: 22,
           assignedUser: testUsers[2],
+          description: 'Important repair',
           date: new Date('2017-08-11'),
           time: '16:40',
           status: C.PENDING,
