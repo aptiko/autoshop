@@ -17,6 +17,7 @@ class RepairSerializerTestCase(TestCase):
         models.Repair.objects.create(assigned_user=self.user,
                                      date=datetime.date(2017, 4, 27),
                                      time=datetime.time(13, 00),
+                                     description='Important repair',
                                      status=0)
 
     def test_serializer(self):
@@ -27,10 +28,12 @@ class RepairSerializerTestCase(TestCase):
                           'assigned_user': self.user.id,
                           'date': '2017-04-27',
                           'time': '13:00:00',
+                          'description': 'Important repair',
                           'status': 0,
                           })
         json = ('{{"id":{},"assigned_user":{},"date":"2017-04-27",'
-                '"time":"13:00:00","status":0}}'
+                '"time":"13:00:00","description":"Important repair",'
+                '"status":0}}'
                 ).format(repair.id, self.user.id)
         self.assertEqual(JSONRenderer().render(serializer.data),
                          bytes(json, 'utf-8'))
@@ -45,6 +48,7 @@ class RepairCommentSerializerTestCase(TestCase):
             assigned_user=self.user,
             date=datetime.date(2017, 4, 27),
             time=datetime.time(13, 00),
+            description='Important repair',
             status=0)
         models.RepairComment.objects.create(
             repair=self.repair,

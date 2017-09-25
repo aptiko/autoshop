@@ -16,6 +16,7 @@ class Repair(models.Model):
     date = models.DateField(default=datetime.date.today, blank=True, null=True)
     time = models.TimeField(blank=True, null=True,
                             validators=[validate_time_ends_in_zero])
+    description = models.CharField(max_length=100)
     status = models.PositiveSmallIntegerField(choices=[
         (0, 'Pending'),
         (1, 'Complete'),
@@ -27,8 +28,8 @@ class Repair(models.Model):
         unique_together = ('date', 'time')
 
     def __str__(self):
-        return 'Repair {} at {} {}'.format(self.id, self.date.isoformat(),
-                                           self.time)
+        return 'Repair {}, "{}", at {} {}'.format(
+            self.id, self.description, self.date.isoformat(), self.time)
 
     def save(self, *args, **kwargs):
         validate_time_ends_in_zero(self.time)
